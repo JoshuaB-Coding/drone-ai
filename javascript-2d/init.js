@@ -1,5 +1,7 @@
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 400;
+const dt = 0.01; // step size
+const g = 9.81;
 
 function startGame() {
     var container = document.createElement('div');
@@ -10,11 +12,18 @@ function startGame() {
 
     document.body.addEventListener('keydown', (e) => domain.registerKeyDown(e));
     document.body.addEventListener('keyup', (e) => domain.registerKeyUp(e));
+
+    var drone = new Drone();
+    drone.render(domain.context);
     
     // Here for when game is setup
-    // setInterval(function() {
-    //     domain.resetCanvas();
-    // }, 50);
+    setInterval(function() {
+        domain.resetCanvas();
+        
+        drone.updatePosition();
+
+        drone.render(domain.context);
+    }, dt * 1000);
 }
   
 var domain = {
