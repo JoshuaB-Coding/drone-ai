@@ -5,7 +5,7 @@
 class Drone {
     constructor() {
         this.m = 50; // kg
-        this.Iyy = 40; // kg.m^4 ?
+        this.Iyy = 50; // kg.m^2
         this.x = CANVAS_WIDTH / 2;
         this.y = CANVAS_HEIGHT / 2;
 
@@ -20,12 +20,40 @@ class Drone {
         this.q = 0;
         this.theta = 0;
 
+        this.HOVER_THRUST = this.m * g / 2;
+        this.MAX_THRUST = this.HOVER_THRUST * 3;
+        this.MIN_THRUST = 0;
+        this.DRAG_FACTOR = 0.8;
+
         this.T_f = this.m * g / 2;
         this.T_a = this.T_f;
 
         this.x_CG = 0;
         this.x_f = 1;
         this.x_a = -1;
+    }
+
+    throttleMax() {
+        this.T_f = this.MAX_THRUST;
+        this.T_a = this.MAX_THRUST;
+    }
+
+    throttleMin() {
+        this.T_f = this.MIN_THRUST;
+        this.T_a = this.MIN_THRUST;
+    }
+
+    throttleHover() {
+        this.T_f = this.HOVER_THRUST;
+        this.T_a = this.HOVER_THRUST;
+    }
+
+    throttleLeft() {
+        this.T_a = this.MAX_THRUST;
+    }
+
+    throttleRight() {
+        this.T_f = this.MAX_THRUST;
     }
 
     render(ctx) {
@@ -49,6 +77,13 @@ class Drone {
         this.y -= W_E * dt;
 
         this.rungeKutta4(dt);
+
+        // Ensuring parameters don't get stupidly small
+        const tolerance = 1e-5;
+        if (Math.abs(this.U) < tolerance) this.U = 0;
+        if (Math.abs(this.W) < tolerance) this.W = 0;
+        if (Math.abs(this.q) < tolerance) this.q = 0;
+        if (Math.abs(this.theta) < tolerance) this.theta = 0;
     }
 
     rungeKutta4(dt) {
@@ -63,8 +98,6 @@ class Drone {
         this.W += dt/6 * (k1[1] + k2[1] + k3[1] + k4[1]);
         this.q += dt/6 * (k1[2] + k2[2] + k3[2] + k4[2]);
         this.theta += dt/6 * (k1[3] + k2[3] + k3[3] + k4[3]);
-
-        console.log(this.W);
     }
 
     rungeKutta4_k2(y, k1, dt) {
@@ -87,7 +120,7 @@ class Drone {
         var ydot = [0, 0, 0, 0];
 
         ydot[0] = -y[1] * y[2];
-        ydot[1] = g - (this.T_f + this.T_a) / this.m + y[0] * y[2];
+        ydot[1] = g - (this.T_f + this.T_a) / this.m + y[0] * y[2] - this.DRAG_FACTOR * y[1]; // artificial drag
         ydot[2] = (this.T_f * (this.x_f - this.x_CG) + this.T_a * (this.x_a - this.x_CG)) / this.Iyy;
         ydot[3] = y[2];
 

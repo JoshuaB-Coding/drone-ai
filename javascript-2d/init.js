@@ -1,7 +1,7 @@
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 400;
 const dt = 0.01; // step size
-const g = 9.81;
+const g = 9.81 * 20; // stronger gravity for nicer feel
 
 function startGame() {
     var container = document.createElement('div');
@@ -10,8 +10,8 @@ function startGame() {
 
     domain.setup(container);
 
-    document.body.addEventListener('keydown', (e) => domain.registerKeyDown(e));
-    document.body.addEventListener('keyup', (e) => domain.registerKeyUp(e));
+    document.body.addEventListener('keydown', (e) => domain.registerKeyDown(e, drone));
+    document.body.addEventListener('keyup', (e) => domain.registerKeyUp(e, drone));
 
     var drone = new Drone();
     drone.render(domain.context);
@@ -34,38 +34,38 @@ var domain = {
         this.context = this.canvas.getContext("2d");
         parent.appendChild(this.canvas);
     },
-    registerKeyDown: function(e) {
+    registerKeyDown: function(e, drone) {
         switch(e.code) {
             case 'ArrowRight':
-                console.log('Right arrow pressed!');
+                drone.throttleRight();
                 break;
             case 'ArrowLeft':
-                console.log('Left arrow pressed!');
+                drone.throttleLeft();
                 break;
             case 'ArrowUp':
-                console.log('Up arrow pressed!');
+                drone.throttleMax();
                 break;
             case 'ArrowDown':
-                console.log('Down arrow pressed!');
+                drone.throttleMin();
                 break;
             default:
                 console.log('None arrow key pressed!');
                 break;
         }
     },
-    registerKeyUp: function(e) {
+    registerKeyUp: function(e, drone) {
         switch(e.code) {
             case 'ArrowRight':
-                console.log('Right arrow up!');
+                drone.throttleHover();
                 break;
             case 'ArrowLeft':
-                console.log('Left arrow up!');
+                drone.throttleHover();
                 break;
             case 'ArrowUp':
-                console.log('Up arrow up!');
+                drone.throttleHover();
                 break;
             case 'ArrowDown':
-                console.log('Down arrow up!');
+                drone.throttleHover();
                 break;
             default:
                 console.log('None arrow key up!');
