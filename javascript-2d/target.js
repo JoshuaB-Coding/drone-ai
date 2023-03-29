@@ -6,7 +6,7 @@ class Target {
         else {
             this.type = 'line';
         }
-        this.type = 'line'; // temporary
+        this.type = 'point';
 
         this.END_TIME = T; // seconds
         this.POINT_RADIUS = 30;
@@ -82,6 +82,18 @@ class Target {
     }
 
     renderPoint(ctx, drone) {
+        const X = this.x + (drone.x - CANVAS_WIDTH / 2) * 2;
+        const Y = this.y - (drone.y - CANVAS_HEIGHT / 2) * 2;
 
+        ctx.beginPath();
+        
+        ctx.moveTo(X, Y);
+        ctx.arc(X, Y, this.POINT_RADIUS, 0, 2*Math.PI, true);
+
+        ctx.lineWidth = 0;
+        ctx.fillStyle = this.colour;
+        ctx.fill();
+        
+        // ctx.stroke();
     }
 };

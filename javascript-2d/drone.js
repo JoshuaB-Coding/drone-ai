@@ -82,9 +82,7 @@ class Drone {
         const dx_dt = this.U * Math.cos(this.theta) - this.W * Math.sin(this.theta);
         const dy_dt = -this.U * Math.sin(this.theta) - this.W * Math.cos(this.theta);
 
-        console.log(dy_dt);
-
-        this.x -= dx_dt * dt;
+        this.x += dx_dt * dt;
         this.y -= dy_dt * dt;
     }
 

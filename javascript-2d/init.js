@@ -51,7 +51,7 @@ var domain = {
 
         // Adding drone position
         for (let i = 0; i < 3; i++) {
-            X[i] += (drone.x - CANVAS_WIDTH / 2) * 2;
+            X[i] -= (drone.x - CANVAS_WIDTH / 2) * 2;
             Y[i] -= (drone.y - CANVAS_HEIGHT / 2) * 2;
         }
 
