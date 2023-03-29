@@ -35,6 +35,6 @@ After these first stages have been added, the second set of features to be inclu
   - [ ] Hover at a given position (shown by a circle)
 
 Alongside the main features, various improvements to the UI and algorithms are to be made. These are listed below for sake of keeping track:
-- [ ] Including a background which moves with the player, making movement feel faster
+- [x] Including a background which moves with the player, making movement feel faster
 - [ ] Improving the collision detection algorithm to account for the actual shape of the drone
 - [ ] Changing the style of the border to make it look nicer
