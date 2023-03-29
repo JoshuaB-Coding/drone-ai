@@ -18,7 +18,7 @@ class Agent {
     }
 
     update() {
-        // this.performAction();
+        this.performAction();
         this.drone.updatePosition();
         this.cost += this.target.getDistance(this.drone) /  + this.drone.theta;
     }
