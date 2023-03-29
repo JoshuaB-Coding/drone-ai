@@ -36,6 +36,17 @@ After these first stages have been added, the second set of features to be inclu
   - [x] Hover at a given position (shown by a circle)
 - [x] The target should reset after a specified time period
 
+After adding the `Agent` class, it is time to introduce the evolution algorithm. The list of features which are to be added to make this work are listed below. It is important to also note that relatively low refresh rates on the targets are used as using fast refresh rates would make it difficult to train the AI.
+- [ ] Create an `Evolution` class
+  - [ ] Accept a number of agents to create in each generation
+  - [ ] Store a list of agents
+  - [ ] Include a method to detect whether or not a generation has finished
+  - [ ] Include a method to create a new generation from the best performing agents of the previous generation
+  - [ ] Include a small mutation chance for the next generation
+- [ ] Only render one of the agents at a time (ideally the first)
+- [ ] Keep track of the best agent coefficients at each iteration
+- [ ] Display the best scores of the previous and current generations on screen
+
 Alongside the main features, various improvements to the UI and algorithms are to be made. These are listed below for sake of keeping track:
 - [x] Including a background which moves with the player, making movement feel faster
 - [ ] Improving the collision detection algorithm to account for the actual shape of the drone
