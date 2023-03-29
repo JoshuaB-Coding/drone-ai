@@ -26,13 +26,15 @@ The first iteration of this code is detailed below. The features which need to b
 - [x] Controls to allow the user to tilt the drone left or right
 
 After these first stages have been added, the second set of features to be included are listed below:
-- [ ] Adding an agent which controls the drone
-  - [ ] An instance of `Drone` should be stored within the agent
-  - [ ] The agent should compute a suggested action depending on the current state of the drone
-  - [ ] This agent should have PID control parameters $K_h$ and $K_\theta$ corresponding to altitude and pitch control terms respectively. These will be vectors of 3 values each
-- [ ] Introduce a flight path which has the following 'obstacles'
-  - [ ] Hover at a given altitude (shown by a horizontal line)
-  - [ ] Hover at a given position (shown by a circle)
+- [x] Adding an agent which controls the drone
+  - [x] An instance of `Drone` should be stored within the agent
+  - [x] The agent should compute a suggested action depending on the current state of the game
+  - [x] The agent should contain weights $w_i$ for each parameter stored in the game state and evaluate an action depending on those
+  - [x] The agent should keep track of the score it has so that the best performing AI in each generation can be used
+- [x] Introduce a flight path which has the following 'targets'
+  - [x] Hover at a given altitude (shown by a horizontal line)
+  - [x] Hover at a given position (shown by a circle)
+- [x] The target should reset after a specified time period
 
 Alongside the main features, various improvements to the UI and algorithms are to be made. These are listed below for sake of keeping track:
 - [x] Including a background which moves with the player, making movement feel faster
