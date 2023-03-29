@@ -51,3 +51,5 @@ Alongside the main features, various improvements to the UI and algorithms are t
 - [x] Including a background which moves with the player, making movement feel faster
 - [ ] Improving the collision detection algorithm to account for the actual shape of the drone
 - [ ] Changing the style of the border to make it look nicer
+- [ ] Allow for changing the size of the play area and scale everything with that
+- [ ] Improve graphics and add extra choices for backgrounds and drone
