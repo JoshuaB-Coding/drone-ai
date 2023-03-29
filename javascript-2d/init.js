@@ -10,26 +10,26 @@ function startGame() {
 
     domain.setup(container);
 
-    document.body.addEventListener('keydown', (e) => domain.registerKeyDown(e, drone));
-    document.body.addEventListener('keyup', (e) => domain.registerKeyUp(e, drone));
+    document.body.addEventListener('keydown', (e) => domain.registerKeyDown(e, agent));
+    document.body.addEventListener('keyup', (e) => domain.registerKeyUp(e, agent));
 
-    var drone = new Drone();
-    drone.render(domain.context);
+    var agent = new Agent();
+    agent.render(domain.context);
     
     // Here for when game is setup
     setInterval(function() {
         domain.resetCanvas();
         
-        drone.updatePosition();
+        agent.update();
 
-        if (drone.detectCollision()) {
+        if (agent.detectCollision()) {
             alert("Drone died :(");
-            drone.reset();
+            agent.reset();
         }
 
         // Render background first to push it to back
-        domain.renderBackground(drone);
-        drone.render(domain.context);
+        domain.renderBackground(agent.drone);
+        agent.render(domain.context);
     }, dt * 1000);
 }
   
@@ -61,7 +61,8 @@ var domain = {
             }
         }
     },
-    registerKeyDown: function(e, drone) {
+    registerKeyDown: function(e, agent) {
+        const drone = agent.drone;
         switch(e.code) {
             case 'ArrowRight':
                 drone.throttleRight();
@@ -80,7 +81,8 @@ var domain = {
                 break;
         }
     },
-    registerKeyUp: function(e, drone) {
+    registerKeyUp: function(e, agent) {
+        const drone = agent.drone;
         switch(e.code) {
             case 'ArrowRight':
                 drone.throttleHover();

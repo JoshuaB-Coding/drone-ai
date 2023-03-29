@@ -3,11 +3,11 @@
  */
 
 class Drone {
-    constructor() {
+    constructor(x = CANVAS_WIDTH / 2, y = CANVAS_HEIGHT / 2) {
         this.m = 50; // kg
-        this.Iyy = 50; // kg.m^2
-        this.x = CANVAS_WIDTH / 2;
-        this.y = CANVAS_HEIGHT / 2;
+        this.Iyy = 500; // kg.m^2
+        this.x = x;
+        this.y = y;
 
         this.img = new Image();
         this.img.src = "drone_boi.png";
@@ -69,21 +69,23 @@ class Drone {
     }
 
     updatePosition() {
-        // This is much more complex than this :(
-        const U_E = this.U * Math.cos(this.theta) - this.W * Math.sin(this.theta);
-        const W_E = this.U * Math.sin(this.theta) - this.W * Math.cos(this.theta);
-
-        this.x += U_E * dt;
-        this.y -= W_E * dt;
-
         this.rungeKutta4(dt);
 
         // Ensuring parameters don't get stupidly small
-        const tolerance = 1e-5;
+        const tolerance = 1e-3;
         if (Math.abs(this.U) < tolerance) this.U = 0;
         if (Math.abs(this.W) < tolerance) this.W = 0;
         if (Math.abs(this.q) < tolerance) this.q = 0;
         if (Math.abs(this.theta) < tolerance) this.theta = 0;
+
+        // 2D navigation equations
+        const dx_dt = this.U * Math.cos(this.theta) - this.W * Math.sin(this.theta);
+        const dy_dt = -this.U * Math.sin(this.theta) - this.W * Math.cos(this.theta);
+
+        console.log(dy_dt);
+
+        this.x -= dx_dt * dt;
+        this.y -= dy_dt * dt;
     }
 
     detectCollision() {
@@ -139,10 +141,14 @@ class Drone {
     droneEoM(y) {
         var ydot = [0, 0, 0, 0];
 
-        ydot[0] = -y[1] * y[2] - g * Math.sin(y[3]);
+        ydot[0] = -y[1] * y[2] + g * Math.sin(y[3]);
         ydot[1] = g * Math.cos(y[3]) - (this.T_f + this.T_a) / this.m + y[0] * y[2] - this.DRAG_FACTOR * y[1]; // artificial drag
         ydot[2] = (this.T_f * (this.x_f - this.x_CG) + this.T_a * (this.x_a - this.x_CG)) / this.Iyy;
         ydot[3] = y[2];
+
+        for (let i = 0; i < 3; i++) {
+            if (Math.abs(ydot[i]) < 1e-5) ydot[i] = 0;
+        }
 
         return ydot;
     }
