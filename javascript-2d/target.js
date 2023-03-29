@@ -1,21 +1,25 @@
 class Target {
-    constructor(T = 10) {
+    constructor() {
+        this.POINT_RADIUS = 30;
+        this.LINE_WIDTH = 5;
+
+        this.colour = 'red';
+
+        this.generateNewTarget();
+    }
+
+    generateNewTarget() {
         if (Math.random() > 0.5) {
             this.type = 'point';
         }
         else {
             this.type = 'line';
         }
-        this.type = 'point';
-
-        this.END_TIME = T; // seconds
-        this.POINT_RADIUS = 30;
-        this.LINE_WIDTH = 5;
-
-        this.colour = 'red';
 
         this.x = (Math.random() - 1/3) * 3 * CANVAS_WIDTH;
         this.y = (Math.random() - 1/3) * 3 * CANVAS_HEIGHT;
+
+        console.log(this.type);
     }
 
     getDistance(drone) {
@@ -41,7 +45,7 @@ class Target {
     }
 
     getDistancePoint(drone) {
-        const relativeX = this.x + (drone.x - CANVAS_WIDTH / 2) * 2;
+        const relativeX = this.x - (drone.x - CANVAS_WIDTH / 2) * 2;
         const relativeY = this.y - (drone.y - CANVAS_HEIGHT / 2) * 2;
 
         const dx = relativeX - drone.x;
@@ -55,6 +59,10 @@ class Target {
             this.colour = 'green';
         }
         return distance;
+    }
+
+    reset() {
+        this.generateNewTarget();
     }
 
     render(ctx, drone) {
@@ -82,7 +90,7 @@ class Target {
     }
 
     renderPoint(ctx, drone) {
-        const X = this.x + (drone.x - CANVAS_WIDTH / 2) * 2;
+        const X = this.x - (drone.x - CANVAS_WIDTH / 2) * 2;
         const Y = this.y - (drone.y - CANVAS_HEIGHT / 2) * 2;
 
         ctx.beginPath();
@@ -90,10 +98,7 @@ class Target {
         ctx.moveTo(X, Y);
         ctx.arc(X, Y, this.POINT_RADIUS, 0, 2*Math.PI, true);
 
-        ctx.lineWidth = 0;
         ctx.fillStyle = this.colour;
         ctx.fill();
-        
-        // ctx.stroke();
     }
 };
