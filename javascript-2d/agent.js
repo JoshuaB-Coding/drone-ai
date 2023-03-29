@@ -1,15 +1,15 @@
 class Agent {
     constructor(x = CANVAS_WIDTH / 2, y = CANVAS_HEIGHT / 2) {
         this.drone = new Drone(x, y);
-        this.target = new Target(3);
+        this.target = new Target();
 
         this.cost = 0;
+        this.timeAlive = 0;
         this.w_T_f = [0, 0];
         this.w_T_a = [0, 0];
         this.generateWeights();
 
-        this.TARGET_RESET_TIME = 5000; // ms
-        console.log(this.target);
+        this.TARGET_RESET_TIME = 20000; // ms
         this.intervalID = setInterval(() => {
                 this.target.generateNewTarget();
             },
@@ -18,9 +18,15 @@ class Agent {
     }
 
     update() {
+        if (!this.drone.isAlive) return;
+
         this.performAction();
         this.drone.updatePosition();
-        this.cost += this.target.getDistance(this.drone) /  + this.drone.theta;
+
+        // Approximate cost function
+        this.cost += this.target.getDistance(this.drone) / 200 + this.drone.theta;
+        if (Math.abs(this.drone.theta) > Math.PI / 2) this.cost += 1000;
+        this.timeAlive += dt;
     }
 
     performAction() {
@@ -48,6 +54,11 @@ class Agent {
         }
     }
 
+    manuallySetWeights(w_T_f, w_T_a) {
+        this.w_T_f = w_T_f;
+        this.w_T_a = w_T_a;
+    }
+
     detectCollision() {
         if (this.drone.detectCollision()) {
             clearInterval(this.target.intervalID);
@@ -69,7 +80,6 @@ class Agent {
     }
 
     render(ctx) {
-        this.target.getDistance(this.drone);
         this.target.render(ctx, this.drone);
         this.drone.render(ctx);
     }

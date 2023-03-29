@@ -4,6 +4,8 @@
 
 class Drone {
     constructor(x = CANVAS_WIDTH / 2, y = CANVAS_HEIGHT / 2) {
+        this.isAlive = true;
+
         this.m = 50; // kg
         this.Iyy = 500; // kg.m^2
         this.x = x;
@@ -78,6 +80,10 @@ class Drone {
         if (Math.abs(this.q) < tolerance) this.q = 0;
         if (Math.abs(this.theta) < tolerance) this.theta = 0;
 
+        // Stopping theta from exceeding -pi to pi range
+        while (this.theta > Math.PI) this.theta -= 2*Math.PI;
+        while (this.theta < -Math.PI) this.theta += 2*Math.PI;
+
         // 2D navigation equations
         const dx_dt = this.U * Math.cos(this.theta) - this.W * Math.sin(this.theta);
         const dy_dt = -this.U * Math.sin(this.theta) - this.W * Math.cos(this.theta);
@@ -104,6 +110,7 @@ class Drone {
         this.theta = 0;
         this.T_f = this.HOVER_THRUST;
         this.T_a = this.HOVER_THRUST;
+        this.isAlive = true;
     }
 
     rungeKutta4(dt) {
