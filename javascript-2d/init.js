@@ -22,6 +22,11 @@ function startGame() {
         
         drone.updatePosition();
 
+        if (drone.detectCollision()) {
+            alert("Drone died :(");
+            drone.reset();
+        }
+
         drone.render(domain.context);
     }, dt * 1000);
 }

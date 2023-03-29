@@ -49,11 +49,11 @@ class Drone {
     }
 
     throttleLeft() {
-        this.T_a = this.MAX_THRUST;
+        this.T_a = this.MAX_THRUST * 0.8;
     }
 
     throttleRight() {
-        this.T_f = this.MAX_THRUST;
+        this.T_f = this.MAX_THRUST * 0.8;
     }
 
     render(ctx) {
@@ -84,6 +84,26 @@ class Drone {
         if (Math.abs(this.W) < tolerance) this.W = 0;
         if (Math.abs(this.q) < tolerance) this.q = 0;
         if (Math.abs(this.theta) < tolerance) this.theta = 0;
+    }
+
+    detectCollision() {
+        // Very poor collision detection method, but is sufficient for now
+        if (this.x > CANVAS_WIDTH) return true;
+        if (this.x < 0) return true;
+        if (this.y > CANVAS_HEIGHT) return true;
+        if (this.y < 0) return true;
+        return false;
+    }
+
+    reset() {
+        this.x = CANVAS_WIDTH / 2;
+        this.y = CANVAS_HEIGHT / 2;
+        this.U = 0;
+        this.W = 0;
+        this.q = 0;
+        this.theta = 0;
+        this.T_f = this.HOVER_THRUST;
+        this.T_a = this.HOVER_THRUST;
     }
 
     rungeKutta4(dt) {
@@ -119,8 +139,8 @@ class Drone {
     droneEoM(y) {
         var ydot = [0, 0, 0, 0];
 
-        ydot[0] = -y[1] * y[2];
-        ydot[1] = g - (this.T_f + this.T_a) / this.m + y[0] * y[2] - this.DRAG_FACTOR * y[1]; // artificial drag
+        ydot[0] = -y[1] * y[2] - g * Math.sin(y[3]);
+        ydot[1] = g * Math.cos(y[3]) - (this.T_f + this.T_a) / this.m + y[0] * y[2] - this.DRAG_FACTOR * y[1]; // artificial drag
         ydot[2] = (this.T_f * (this.x_f - this.x_CG) + this.T_a * (this.x_a - this.x_CG)) / this.Iyy;
         ydot[3] = y[2];
 
