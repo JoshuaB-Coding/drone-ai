@@ -34,7 +34,7 @@ After these first stages have been added, the second set of features to be inclu
 - [x] Introduce a flight path which has the following 'targets'
   - [x] Hover at a given altitude (shown by a horizontal line)
   - [x] Hover at a given position (shown by a circle)
-- [ ] The target should reset after a specified time period
+- [x] The target should reset after a specified time period
 
 Alongside the main features, various improvements to the UI and algorithms are to be made. These are listed below for sake of keeping track:
 - [x] Including a background which moves with the player, making movement feel faster

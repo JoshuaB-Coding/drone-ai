@@ -18,8 +18,6 @@ class Target {
 
         this.x = (Math.random() - 1/3) * 3 * CANVAS_WIDTH;
         this.y = (Math.random() - 1/3) * 3 * CANVAS_HEIGHT;
-
-        console.log(this.type);
     }
 
     getDistance(drone) {

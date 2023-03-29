@@ -8,9 +8,12 @@ class Agent {
         this.w_T_a = [0, 0];
         this.generateWeights();
 
-        this.intervalID = setInterval(
-            this.target.generateNewTarget,
-            5000
+        this.TARGET_RESET_TIME = 5000; // ms
+        console.log(this.target);
+        this.intervalID = setInterval(() => {
+                this.target.generateNewTarget();
+            },
+            this.TARGET_RESET_TIME
         );
     }
 
@@ -58,9 +61,10 @@ class Agent {
         clearInterval(this.intervalID);
         this.target.reset();
         this.drone.reset();
-        setInterval(
-            this.drone.generateNewTarget,
-            5000
+        this.intervalID = setInterval(() => {
+                this.drone.generateNewTarget();
+            },
+            this.TARGET_RESET_TIME
         );
     }
 
