@@ -38,12 +38,12 @@ After these first stages have been added, the second set of features to be inclu
 
 After adding the `Agent` class, it is time to introduce the evolution algorithm. The list of features which are to be added to make this work are listed below. It is important to also note that relatively low refresh rates on the targets are used as using fast refresh rates would make it difficult to train the AI.
 - [ ] Create an `Evolution` class
-  - [ ] Accept a number of agents to create in each generation
-  - [ ] Store a list of agents
-  - [ ] Include a method to detect whether or not a generation has finished
+  - [x] Accept a number of agents to create in each generation
+  - [x] Store a list of agents
+  - [x] Include a method to detect whether or not a generation has finished
   - [ ] Include a method to create a new generation from the best performing agents of the previous generation
   - [ ] Include a small mutation chance for the next generation
-- [ ] Only render one of the agents at a time (ideally the first)
+- [x] Only render one of the agents at a time (ideally the first)
 - [ ] Keep track of the best agent coefficients at each iteration
 - [ ] Display the best scores of the previous and current generations on screen
 

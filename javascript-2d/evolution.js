@@ -1,6 +1,7 @@
 class Evolution {
     constructor(N = 20) {
         this.N = N; // number of samples per generation
+        this.generation = 1;
 
         this.agents = [];
         for (let i = 0; i < N; i++) {
@@ -20,6 +21,7 @@ class Evolution {
             this.agents[i].reset();
         }
         this.nextGeneration();
+        this.generation += 1;
     }
 
     nextGeneration() {

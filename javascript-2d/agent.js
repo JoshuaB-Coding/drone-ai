@@ -32,7 +32,7 @@ class Agent {
     performAction() {
         const state = [
             this.drone.theta,
-            this.target.getDistance(this.drone)
+            this.target.getDistance(this.drone) / 800
         ];
 
         var T_f = 0;
@@ -61,19 +61,24 @@ class Agent {
 
     detectCollision() {
         if (this.drone.detectCollision()) {
-            clearInterval(this.target.intervalID);
             return true;
         }
         return false;
     }
 
+    clearTargetInterval() {
+        clearInterval(this.target.intervalID);
+    }
+
     reset() {
         this.generateWeights();
-        clearInterval(this.intervalID);
+        this.clearTargetInterval();
         this.target.reset();
         this.drone.reset();
+        this.timeAlive = 0;
+        this.cost = 0;
         this.intervalID = setInterval(() => {
-                this.drone.generateNewTarget();
+                this.target.generateNewTarget();
             },
             this.TARGET_RESET_TIME
         );

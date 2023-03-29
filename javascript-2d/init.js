@@ -13,7 +13,10 @@ function startGame() {
     document.body.addEventListener('keydown', (e) => domain.registerKeyDown(e, agent));
     document.body.addEventListener('keyup', (e) => domain.registerKeyUp(e, agent));
 
-    const N = 50;
+    var text = document.createElement('h1');
+    document.body.appendChild(text);
+
+    const N = 20;
     var evolution = new Evolution(N);
     
     // Here for when game is setup
@@ -21,11 +24,16 @@ function startGame() {
         var displayIndex = evolution.firstAlive();
         domain.resetCanvas();
 
+        text.textContent = "Generation: " + evolution.generation;
+
         for (let i = 0; i < N; i++) {
+            if (!evolution.agents[i].drone.isAlive) continue;
+
             evolution.agents[i].update();
 
-            if (evolution.agents[i].detectCollision()) {
-                console.log('Drone ', i, ' died :(');
+            if (evolution.agents[i].detectCollision() || evolution.agents[i].timeAlive > 10) {
+                // console.log('Drone ', i, ' died :(');
+                evolution.agents[i].clearTargetInterval();
                 evolution.agents[i].drone.isAlive = false;
                 if (i === displayIndex) {
                     displayIndex = evolution.firstAlive();
@@ -36,6 +44,7 @@ function startGame() {
         if (evolution.isFinished()) {
             console.log('Everyone is dead :(');
             evolution.resetAll();
+            displayIndex = 0;
         }
 
         // Render background first to push it to back
