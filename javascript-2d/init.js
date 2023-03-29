@@ -16,7 +16,7 @@ function startGame() {
     var text = document.createElement('h1');
     document.body.appendChild(text);
 
-    const N = 20;
+    const N = 50;
     var evolution = new Evolution(N);
     
     // Here for when game is setup

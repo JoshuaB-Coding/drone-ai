@@ -15,59 +15,52 @@ class Target {
         else {
             this.type = 'line';
         }
+        this.type = 'line';
 
         this.x = (Math.random() - 1/3) * 3 * CANVAS_WIDTH;
         this.y = (Math.random() - 1/3) * 3 * CANVAS_HEIGHT;
     }
 
     getDistance(drone) {
-        if (this.type === 'line') {
-            return this.getDistanceLine(drone);
-        }
-        else {
-            return this.getDistancePoint(drone);
-        }
-    }
-
-    getDistanceLine(drone) {
-        const relativeY = this.y - (drone.y - CANVAS_HEIGHT / 2) * 2;
-
-        const distance = Math.abs(relativeY - drone.y);
-        if (distance > this.LINE_WIDTH) {
-            this.colour = 'red';
-        }
-        else {
-            this.colour = 'green';
-        }
-        return distance;
-    }
-
-    getDistancePoint(drone) {
-        const relativeX = this.x - (drone.x - CANVAS_WIDTH / 2) * 2;
+        const relativeX = this.type === 'line' ? drone.x : this.x - (drone.x - CANVAS_WIDTH / 2) * 2;
         const relativeY = this.y - (drone.y - CANVAS_HEIGHT / 2) * 2;
 
         const dx = relativeX - drone.x;
         const dy = relativeY - drone.y;
 
-        const distance = Math.sqrt(dx*dx + dy*dy);
-        if (distance > this.POINT_RADIUS) {
-            this.colour = 'red';
-        }
-        else {
-            this.colour = 'green';
-        }
-        return distance;
+        return [dx, dy];
     }
 
     reset() {
         this.generateNewTarget();
     }
 
+    setLineColour(drone) {
+        const distance = this.getDistance(drone);
+
+        const dy = distance[1];
+
+        if (Math.abs(dy) > this.LINE_WIDTH) this.colour = 'red';
+        else this.colour = 'green';
+    }
+
+    setPointColour(drone) {
+        const distance = this.getDistance(drone);
+        
+        const dx = distance[0];
+        const dy = distance[1];
+
+        if (Math.sqrt(dx*dx + dy*dy) > this.POINT_RADIUS) this.colour = 'red';
+        else this.colour = 'green';
+    }
+
     render(ctx, drone) {
         if (this.type === 'line') {
+            this.setLineColour(drone);
             this.renderLine(ctx, drone);
         }
         else {
+            this.setPointColour(drone);
             this.renderPoint(ctx, drone);
         }
     }

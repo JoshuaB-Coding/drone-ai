@@ -5,9 +5,12 @@ class Agent {
 
         this.cost = 0;
         this.timeAlive = 0;
-        this.w_T_f = [0, 0];
-        this.w_T_a = [0, 0];
+        this.w_T_f = [0, 0, 0];
+        this.w_T_a = [0, 0, 0];
         this.generateWeights();
+
+        this.state = [0, 0, 0];
+        this.nStates = 3;
 
         this.TARGET_RESET_TIME = 20000; // ms
         this.intervalID = setInterval(() => {
@@ -24,33 +27,37 @@ class Agent {
         this.drone.updatePosition();
 
         // Approximate cost function
-        this.cost += this.target.getDistance(this.drone) / 200 + this.drone.theta;
-        if (Math.abs(this.drone.theta) > Math.PI / 2) this.cost += 1000;
+        this.cost -= (Math.sqrt(this.state[1]*this.state[1] + this.state[2]*this.state[2]) / 200 + Math.abs(this.drone.q) * 1000);
         this.timeAlive += dt;
     }
 
     performAction() {
-        const state = [
-            this.drone.theta,
-            this.target.getDistance(this.drone) / 800
+        const distance = this.target.getDistance(this.drone);
+        this.state = [
+            this.drone.theta * 0,
+            distance[0] * 0,
+            distance[1]
         ];
 
         var T_f = 0;
         var T_a = 0;
 
-        for (let i = 0; i < 2; i++) {
-            T_f += state[i] * this.w_T_f[i] * this.drone.MAX_THRUST;
-            T_a += state[i] * this.w_T_a[i] * this.drone.MAX_THRUST;
+        for (let i = 0; i < this.nStates; i++) {
+            T_f += this.state[i] * this.w_T_f[i] * this.drone.MAX_THRUST;
+            T_a += this.state[i] * this.w_T_a[i] * this.drone.MAX_THRUST;
         }
 
+        if (T_f < 0) T_f = 0;
+        if (T_a < 0) T_a = 0;
+        
         this.drone.T_f = T_f > this.drone.MAX_THRUST ? this.drone.MAX_THRUST : T_f;
         this.drone.T_a = T_a > this.drone.MAX_THRUST ? this.drone.MAX_THRUST : T_a;
     }
 
     generateWeights() {
-        for (let i = 0; i < 2; i++) {
-            this.w_T_f[i] = Math.random();
-            this.w_T_a[i] = Math.random();
+        for (let i = 0; i < this.nStates; i++) {
+            this.w_T_f[i] = (Math.random() - 0.5) * 2;
+            this.w_T_a[i] = (Math.random() - 0.5) * 2;
         }
     }
 
@@ -67,7 +74,7 @@ class Agent {
     }
 
     clearTargetInterval() {
-        clearInterval(this.target.intervalID);
+        clearInterval(this.intervalID);
     }
 
     reset() {
