@@ -12,12 +12,17 @@ class Agent {
         this.state = [0, 0, 0];
         this.nStates = 3;
 
-        this.TARGET_RESET_TIME = 20000; // ms
+        this.TARGET_RESET_TIME = 5000; // ms
         this.intervalID = setInterval(() => {
                 this.target.generateNewTarget();
             },
             this.TARGET_RESET_TIME
         );
+
+        this.DISTANCE_WEIGHTING = 1 / 100;
+        this.INVERTED_COST = 100;
+        this.TIME_WEIGHTING = 20;
+        this.Q_WEIGHTING = 100;
     }
 
     update() {
@@ -27,15 +32,30 @@ class Agent {
         this.drone.updatePosition();
 
         // Approximate cost function
-        this.cost -= (Math.sqrt(this.state[1]*this.state[1] + this.state[2]*this.state[2]) / 200 + Math.abs(this.drone.q) * 1000);
+        this.cost += this.fitnessFunction();
         this.timeAlive += dt;
+    }
+
+    fitnessFunction() {
+        const q_cost = -Math.abs(this.drone.q) * this.Q_WEIGHTING;
+
+        const dx = this.state[1];
+        const dy = this.state[2];
+        const distance_cost = -Math.sqrt(dx*dx + dy*dy) * this.DISTANCE_WEIGHTING;
+
+        var theta_cost = 0;
+        if (Math.abs(this.drone.theta) > Math.PI / 2) theta_cost = -this.INVERTED_COST;
+
+        const total_cost = q_cost + distance_cost + theta_cost;
+
+        return total_cost;
     }
 
     performAction() {
         const distance = this.target.getDistance(this.drone);
         this.state = [
-            this.drone.theta * 0,
-            distance[0] * 0,
+            this.drone.theta,
+            distance[0],
             distance[1]
         ];
 
@@ -68,6 +88,7 @@ class Agent {
 
     detectCollision() {
         if (this.drone.detectCollision()) {
+            this.cost += this.timeAlive * this.TIME_WEIGHTING; // positive score based on time alive
             return true;
         }
         return false;

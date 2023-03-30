@@ -13,38 +13,41 @@ function startGame() {
     document.body.addEventListener('keydown', (e) => domain.registerKeyDown(e, agent));
     document.body.addEventListener('keyup', (e) => domain.registerKeyUp(e, agent));
 
-    var text = document.createElement('h1');
-    document.body.appendChild(text);
+    var evolutionText = document.createElement('h1');
+    document.body.appendChild(evolutionText);
+
+    var agentText = document.createElement('h2');
+    document.body.appendChild(agentText);
 
     const N = 50;
     var evolution = new Evolution(N);
+    const TRAINING_TIME = 15;
     
     // Here for when game is setup
     var id = setInterval(function() {
-        var displayIndex = evolution.firstAlive();
+        var displayIndex = 0;
         domain.resetCanvas();
 
-        text.textContent = "Generation: " + evolution.generation;
+        evolutionText.textContent = "Generation: " + evolution.generation;
 
         for (let i = 0; i < N; i++) {
             if (!evolution.agents[i].drone.isAlive) continue;
 
             evolution.agents[i].update();
+            displayIndex = evolution.bestCurrentAgent();
 
-            if (evolution.agents[i].detectCollision() || evolution.agents[i].timeAlive > 10) {
+            if (evolution.agents[i].detectCollision() || evolution.agents[i].timeAlive > TRAINING_TIME) {
                 // console.log('Drone ', i, ' died :(');
                 evolution.agents[i].clearTargetInterval();
                 evolution.agents[i].drone.isAlive = false;
-                if (i === displayIndex) {
-                    displayIndex = evolution.firstAlive();
-                }
             }
         }
+
+        agentText.textContent = "Agent: " + (displayIndex + 1);
 
         if (evolution.isFinished()) {
             console.log('Everyone is dead :(');
             evolution.resetAll();
-            displayIndex = 0;
         }
 
         // Render background first to push it to back

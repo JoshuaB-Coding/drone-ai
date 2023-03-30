@@ -15,8 +15,24 @@ class Evolution {
         }
         return true;
     }
+
+    bestCurrentAgent() {
+        let index = 0;
+        let bestCost = this.agents[0].cost;
+        for (let i = 1; i < this.N; i++) {
+            if (this.agents[i].cost < bestCost) continue;
+            if (!this.agents[i].drone.isAlive) continue;
+            index = i;
+            bestCost = this.agents[i].cost;
+        }
+        return index;
+    }
     
     resetAll() {
+        for (let i = 0; i < this.N; i++) {
+            if (!this.agents[i].drone.isAlive) continue;
+            this.agents[i].cost += this.agents[i].timeAlive * this.agents[i].TIME_WEIGHTING;
+        }
         this.nextGeneration();
         for (let i = 0; i < this.N; i++) {
             this.agents[i].reset();
