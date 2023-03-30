@@ -34,14 +34,14 @@ function startGame() {
             if (!evolution.agents[i].drone.isAlive) continue;
 
             evolution.agents[i].update();
-            displayIndex = evolution.bestCurrentAgent();
 
-            if (evolution.agents[i].detectCollision() || evolution.agents[i].timeAlive > TRAINING_TIME) {
+            if (evolution.agents[i].detectCollision(evolution.generation) || evolution.agents[i].timeAlive > TRAINING_TIME) {
                 // console.log('Drone ', i, ' died :(');
                 evolution.agents[i].clearTargetInterval();
                 evolution.agents[i].drone.isAlive = false;
             }
         }
+        displayIndex = evolution.bestCurrentAgent();
 
         agentText.textContent = "Agent: " + (displayIndex + 1);
 

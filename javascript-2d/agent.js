@@ -5,12 +5,13 @@ class Agent {
 
         this.cost = 0;
         this.timeAlive = 0;
-        this.w_T_f = [0, 0, 0];
-        this.w_T_a = [0, 0, 0];
+
+        this.nInputs = 5;
+        this.nOutputs = 2;
+        this.w = [[], []];
         this.generateWeights();
 
         this.state = [0, 0, 0];
-        this.nStates = 3;
 
         this.TARGET_RESET_TIME = 5000; // ms
         this.intervalID = setInterval(() => {
@@ -56,15 +57,17 @@ class Agent {
         this.state = [
             this.drone.theta,
             distance[0],
-            distance[1]
+            distance[1],
+            this.drone.U,
+            this.drone.W
         ];
 
         var T_f = 0;
         var T_a = 0;
 
-        for (let i = 0; i < this.nStates; i++) {
-            T_f += this.state[i] * this.w_T_f[i] * this.drone.MAX_THRUST;
-            T_a += this.state[i] * this.w_T_a[i] * this.drone.MAX_THRUST;
+        for (let i = 0; i < this.nInputs; i++) {
+            T_f += this.state[i] * this.w[0][i] * this.drone.MAX_THRUST;
+            T_a += this.state[i] * this.w[1][i] * this.drone.MAX_THRUST;
         }
 
         if (T_f < 0) T_f = 0;
@@ -75,20 +78,22 @@ class Agent {
     }
 
     generateWeights() {
-        for (let i = 0; i < this.nStates; i++) {
-            this.w_T_f[i] = (Math.random() - 0.5) * 2;
-            this.w_T_a[i] = (Math.random() - 0.5) * 2;
+        for (let i = 0; i < this.nOutputs; i++) {
+            for (let j = 0; j < this.nInputs; j++) {
+                this.w[i][j] = (Math.random() - 0.5) * 2;
+            }
         }
     }
 
-    manuallySetWeights(w_T_f, w_T_a) {
-        this.w_T_f = w_T_f;
-        this.w_T_a = w_T_a;
+    manuallySetWeights(w) {
+        this.w = w;
     }
 
-    detectCollision() {
+    detectCollision(generation) {
+        // If at later generation, assume AI's that crash are worse
         if (this.drone.detectCollision()) {
-            this.cost += this.timeAlive * this.TIME_WEIGHTING; // positive score based on time alive
+            if (generation > 10) this.cost = -Infinity;
+            else this.cost += this.timeAlive * this.TIME_WEIGHTING; // positive score based on time alive
             return true;
         }
         return false;
@@ -99,7 +104,7 @@ class Agent {
     }
 
     reset() {
-        this.generateWeights();
+        // this.generateWeights();
         this.clearTargetInterval();
         this.target.reset();
         this.drone.reset();

@@ -18,8 +18,8 @@ class Evolution {
 
     bestCurrentAgent() {
         let index = 0;
-        let bestCost = this.agents[0].cost;
-        for (let i = 1; i < this.N; i++) {
+        let bestCost = -Infinity;
+        for (let i = 0; i < this.N; i++) {
             if (this.agents[i].cost < bestCost) continue;
             if (!this.agents[i].drone.isAlive) continue;
             index = i;
@@ -43,22 +43,19 @@ class Evolution {
     nextGeneration() {
         const indices = this.bestPerformers();
         const weightingRanges = this.optimalWeightingRanges(indices);
+        const nInputs = this.agents[0].nInputs;
 
         for (let i = 0; i < this.N; i++) {
             if (i in indices) continue;
 
-            var w_T_f = [0, 0, 0];
-            var w_T_a = [0, 0, 0];
+            var w = [[], []];
 
-            w_T_f[0] = weightingRanges[0][0] + Math.random() * weightingRanges[0][1];
-            w_T_f[1] = weightingRanges[1][0] + Math.random() * weightingRanges[1][1];
-            w_T_f[2] = weightingRanges[2][0] + Math.random() * weightingRanges[2][1];
+            for (let k = 0; k < nInputs; k++) {
+                w[0][k] = weightingRanges[k][0] + Math.random() * weightingRanges[k][1];
+                w[1][k] = weightingRanges[k + nInputs][0] + Math.random() * weightingRanges[k][1];
+            }
 
-            w_T_a[0] = weightingRanges[3][0] + Math.random() * weightingRanges[3][1];
-            w_T_a[1] = weightingRanges[4][0] + Math.random() * weightingRanges[4][1];
-            w_T_a[3] = weightingRanges[5][0] + Math.random() * weightingRanges[5][1];
-
-            this.agents[i].manuallySetWeights(w_T_f, w_T_a);
+            this.agents[i].manuallySetWeights(w);
         }
     }
 
@@ -92,28 +89,21 @@ class Evolution {
 
     optimalWeightingRanges(indices) {
         // Not very well written - improve later
-        let ranges = [[1, -1], [1, -1], [1, -1], [1, -1], [1, -1], [1, -1]];
+        let ranges = [
+            [1, -1], [1, -1], [1, -1], [1, -1], [1, -1],
+            [1, -1], [1, -1], [1, -1], [1, -1], [1, -1]
+        ];
 
         for (let i = 0; i < 6; i++) {
             const agent = this.agents[i];
 
-            if (ranges[0][0] > agent.w_T_f[0]) ranges[0][0] = agent.w_T_f[0];
-            if (ranges[0][1] < agent.w_T_f[0]) ranges[0][1] = agent.w_T_f[0];
+            for (let k = 0; k < agent.nInputs; k++) {
+                if (ranges[k][0] > agent.w[0][k]) ranges[k][0] = agent.w[0][k];
+                if (ranges[k][1] < agent.w[0][k]) ranges[k][1] = agent.w[0][k];
 
-            if (ranges[1][0] > agent.w_T_f[1]) ranges[1][0] = agent.w_T_f[1];
-            if (ranges[1][1] < agent.w_T_f[1]) ranges[1][1] = agent.w_T_f[1];
-
-            if (ranges[2][0] > agent.w_T_f[1]) ranges[2][0] = agent.w_T_f[2];
-            if (ranges[2][1] < agent.w_T_f[1]) ranges[2][1] = agent.w_T_f[2];
-
-            if (ranges[3][0] > agent.w_T_a[0]) ranges[3][0] = agent.w_T_a[0];
-            if (ranges[3][1] < agent.w_T_a[0]) ranges[3][1] = agent.w_T_a[0];
-
-            if (ranges[4][0] > agent.w_T_a[1]) ranges[4][0] = agent.w_T_a[1];
-            if (ranges[4][1] < agent.w_T_a[1]) ranges[4][1] = agent.w_T_a[1];
-
-            if (ranges[5][0] > agent.w_T_a[2]) ranges[5][0] = agent.w_T_a[2];
-            if (ranges[5][1] < agent.w_T_a[2]) ranges[5][1] = agent.w_T_a[2];
+                if (ranges[k + agent.nInputs][0] > agent.w[1][k]) ranges[k + agent.nInputs][0] = agent.w[1][k];
+                if (ranges[k + agent.nInputs][1] < agent.w[1][k]) ranges[k + agent.nInputs][1] = agent.w[1][k];
+            }
         }
 
         return ranges;
