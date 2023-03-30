@@ -59,3 +59,4 @@ Alongside the main features, various improvements to the UI and algorithms are t
 - [ ] Changing the style of the border to make it look nicer
 - [ ] Allow for changing the size of the play area and scale everything with that
 - [ ] Improve graphics and add extra choices for backgrounds and drone
+- [ ] Add a floor that only kills the drone if it hits it with a large enough impact velocity
