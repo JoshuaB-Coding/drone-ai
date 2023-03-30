@@ -4,6 +4,8 @@
 
 class Drone {
     constructor(x = CANVAS_WIDTH / 2, y = CANVAS_HEIGHT / 2) {
+        this.isAlive = true;
+
         this.m = 50; // kg
         this.Iyy = 500; // kg.m^2
         this.x = x;
@@ -78,12 +80,16 @@ class Drone {
         if (Math.abs(this.q) < tolerance) this.q = 0;
         if (Math.abs(this.theta) < tolerance) this.theta = 0;
 
+        // Stopping theta from exceeding -pi to pi range
+        while (this.theta > Math.PI) this.theta -= 2*Math.PI;
+        while (this.theta < -Math.PI) this.theta += 2*Math.PI;
+
         // 2D navigation equations
         const dx_dt = this.U * Math.cos(this.theta) - this.W * Math.sin(this.theta);
-        const dy_dt = -this.U * Math.sin(this.theta) - this.W * Math.cos(this.theta);
+        const dy_dt = this.U * Math.sin(this.theta) + this.W * Math.cos(this.theta);
 
-        this.x += dx_dt * dt;
-        this.y -= dy_dt * dt;
+        this.x += dx_dt * dt; // m -> px
+        this.y += dy_dt * dt; // m -> px
     }
 
     detectCollision() {
@@ -104,6 +110,7 @@ class Drone {
         this.theta = 0;
         this.T_f = this.HOVER_THRUST;
         this.T_a = this.HOVER_THRUST;
+        this.isAlive = true;
     }
 
     rungeKutta4(dt) {
@@ -139,9 +146,9 @@ class Drone {
     droneEoM(y) {
         var ydot = [0, 0, 0, 0];
 
-        ydot[0] = -y[1] * y[2] + g * Math.sin(y[3]);
+        ydot[0] = -y[1] * y[2] + g * Math.sin(y[3]) - this.DRAG_FACTOR * y[0]; // this may be the problem line
         ydot[1] = g * Math.cos(y[3]) - (this.T_f + this.T_a) / this.m + y[0] * y[2] - this.DRAG_FACTOR * y[1]; // artificial drag
-        ydot[2] = (this.T_f * (this.x_f - this.x_CG) + this.T_a * (this.x_a - this.x_CG)) / this.Iyy;
+        ydot[2] = (this.T_f * (this.x_f - this.x_CG) + this.T_a * (this.x_a - this.x_CG)) / this.m / this.Iyy;
         ydot[3] = y[2];
 
         for (let i = 0; i < 3; i++) {

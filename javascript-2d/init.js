@@ -1,7 +1,7 @@
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 400;
 const dt = 0.01; // step size
-const g = 9.81 * 20; // stronger gravity for nicer feel
+const g = 9.81 * 20;
 
 function startGame() {
     var container = document.createElement('div');
@@ -13,26 +13,57 @@ function startGame() {
     document.body.addEventListener('keydown', (e) => domain.registerKeyDown(e, agent));
     document.body.addEventListener('keyup', (e) => domain.registerKeyUp(e, agent));
 
-    var agent = new Agent();
-    agent.render(domain.context);
+    var evolutionText = document.createElement('h1');
+    document.body.appendChild(evolutionText);
+
+    var agentText = document.createElement('h2');
+    document.body.appendChild(agentText);
+
+    var velocityText = document.createElement('p');
+    document.body.appendChild(velocityText);
+
+    const N = 50;
+    var evolution = new Evolution(N);
+    const TRAINING_TIME = 15;
     
     // Here for when game is setup
-    setInterval(function() {
+    var id = setInterval(function() {
+        var displayIndex = 0;
         domain.resetCanvas();
-        
-        agent.update();
 
-        if (agent.detectCollision()) {
-            alert("Drone died :(");
-            agent.reset();
+        evolutionText.textContent = "Generation: " + evolution.generation;
+
+        for (let i = 0; i < N; i++) {
+            if (!evolution.agents[i].drone.isAlive) continue;
+
+            evolution.agents[i].update();
+
+            if (evolution.agents[i].detectCollision(evolution.generation) || evolution.agents[i].timeAlive > TRAINING_TIME) {
+                // console.log('Drone ', i, ' died :(');
+                evolution.agents[i].clearTargetInterval();
+                evolution.agents[i].drone.isAlive = false;
+            }
+        }
+        displayIndex = evolution.bestCurrentAgent();
+
+        agentText.textContent = "Agent: " + (displayIndex + 1);
+        velocityText.textContent =
+            "U: " + Math.round(evolution.agents[displayIndex].drone.U*100)/100 +
+            ", W: " + Math.round(evolution.agents[displayIndex].drone.W*100)/100 +
+            ", pitch: " + Math.round(evolution.agents[displayIndex].drone.theta*180/Math.PI) +
+            ", y: " + Math.round(evolution.agents[displayIndex].drone.y*100)/100;
+
+        if (evolution.isFinished()) {
+            console.log('Everyone is dead :(');
+            evolution.resetAll();
         }
 
         // Render background first to push it to back
-        domain.renderBackground(agent.drone);
-        agent.render(domain.context);
+        domain.renderBackground(evolution.agents[displayIndex].drone);
+        evolution.agents[displayIndex].render(domain.context);
     }, dt * 1000);
 }
-  
+
 var domain = {
     canvas: document.createElement("canvas"),
     background_image: new Image(),
