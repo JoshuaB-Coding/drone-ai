@@ -48,7 +48,7 @@ After adding the `Agent` class, it is time to introduce the evolution algorithm.
 - [ ] Display the best scores of the previous and current generations on screen
 
 The basic implementation of the AI evolution has been added and 'works'. However, the current code base is quite messy and so the next aim is to refactor the code to make it easier to navigate and update in the future. Listed below are items which need to be changed - any extra changes made during refactoring should be added to this list.
-- [ ] Change the 'init.js' file into two files that split up the `domain` object and `startGame()` method
+- [ ] Change the 'init.js' file into two files that split up the `domain` object and `startGame()` function
 - [ ] Figure out the most sensible way to split up the methods contained within `Evolution`, `Agent`, `Drone` and `Target`
   - [ ] These changes should be listed down here
 - [ ] Introduce a better way to store the global constants that exist at the top of `init.js`
