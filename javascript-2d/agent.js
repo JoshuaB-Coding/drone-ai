@@ -11,9 +11,9 @@ class Agent {
         this.w = [[], []];
         this.generateWeights();
 
-        this.state = [0, 0, 0];
+        this.state = [];
 
-        this.TARGET_RESET_TIME = 5000; // ms
+        this.TARGET_RESET_TIME = 15000; // ms
         this.intervalID = setInterval(() => {
                 this.target.generateNewTarget();
             },
@@ -21,7 +21,7 @@ class Agent {
         );
 
         this.DISTANCE_WEIGHTING = 1 / 100;
-        this.INVERTED_COST = 100;
+        this.INVERTED_COST = 300;
         this.TIME_WEIGHTING = 20;
         this.Q_WEIGHTING = 100;
     }
@@ -58,7 +58,7 @@ class Agent {
             this.drone.theta,
             distance[0],
             distance[1],
-            this.drone.U,
+            this.drone.U * 0,
             this.drone.W
         ];
 
@@ -92,8 +92,8 @@ class Agent {
     detectCollision(generation) {
         // If at later generation, assume AI's that crash are worse
         if (this.drone.detectCollision()) {
-            if (generation > 10) this.cost = -Infinity;
-            else this.cost += this.timeAlive * this.TIME_WEIGHTING; // positive score based on time alive
+            // if (generation > 40) this.cost = -Infinity;
+            this.cost += this.timeAlive * this.TIME_WEIGHTING; // positive score based on time alive
             return true;
         }
         return false;

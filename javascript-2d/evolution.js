@@ -65,7 +65,7 @@ class Evolution {
 
         bestCost[0] = this.agents[0].cost;
 
-        for (let i = 0; i < this.N; i++) {
+        for (let i = 1; i < this.N; i++) {
             const cost = this.agents[i].cost;
 
             for (let k = 0; k < 6; k++) {
