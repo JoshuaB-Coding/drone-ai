@@ -19,6 +19,9 @@ function startGame() {
     var agentText = document.createElement('h2');
     document.body.appendChild(agentText);
 
+    var velocityText = document.createElement('p');
+    document.body.appendChild(velocityText);
+
     const N = 50;
     var evolution = new Evolution(N);
     const TRAINING_TIME = 15;
@@ -44,6 +47,11 @@ function startGame() {
         displayIndex = evolution.bestCurrentAgent();
 
         agentText.textContent = "Agent: " + (displayIndex + 1);
+        velocityText.textContent =
+            "U: " + Math.round(evolution.agents[displayIndex].drone.U*100)/100 +
+            ", W: " + Math.round(evolution.agents[displayIndex].drone.W*100)/100 +
+            ", pitch: " + Math.round(evolution.agents[displayIndex].drone.theta*180/Math.PI) +
+            ", y: " + Math.round(evolution.agents[displayIndex].drone.y*100)/100;
 
         if (evolution.isFinished()) {
             console.log('Everyone is dead :(');

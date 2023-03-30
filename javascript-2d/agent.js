@@ -58,7 +58,7 @@ class Agent {
             this.drone.theta,
             distance[0],
             distance[1],
-            this.drone.U * 0,
+            this.drone.U,
             this.drone.W
         ];
 
@@ -92,8 +92,8 @@ class Agent {
     detectCollision(generation) {
         // If at later generation, assume AI's that crash are worse
         if (this.drone.detectCollision()) {
-            // if (generation > 40) this.cost = -Infinity;
-            this.cost += this.timeAlive * this.TIME_WEIGHTING; // positive score based on time alive
+            if (generation > 10) this.cost = -Infinity;
+            else this.cost += this.timeAlive * this.TIME_WEIGHTING; // positive score based on time alive
             return true;
         }
         return false;
