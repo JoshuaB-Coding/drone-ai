@@ -88,8 +88,8 @@ class Drone {
         const dx_dt = this.U * Math.cos(this.theta) - this.W * Math.sin(this.theta);
         const dy_dt = -this.U * Math.sin(this.theta) - this.W * Math.cos(this.theta);
 
-        this.x += dx_dt * dt;
-        this.y -= dy_dt * dt;
+        this.x += dx_dt * dt; // m -> px
+        this.y += dy_dt * dt; // m -> px
     }
 
     detectCollision() {
@@ -148,7 +148,7 @@ class Drone {
 
         ydot[0] = -y[1] * y[2] + g * Math.sin(y[3]);
         ydot[1] = g * Math.cos(y[3]) - (this.T_f + this.T_a) / this.m + y[0] * y[2] - this.DRAG_FACTOR * y[1]; // artificial drag
-        ydot[2] = (this.T_f * (this.x_f - this.x_CG) + this.T_a * (this.x_a - this.x_CG)) / this.Iyy - this.DRAG_FACTOR * y[2]; // artificial drag
+        ydot[2] = (this.T_f * (this.x_f - this.x_CG) + this.T_a * (this.x_a - this.x_CG)) / this.m / this.Iyy;
         ydot[3] = y[2];
 
         for (let i = 0; i < 3; i++) {

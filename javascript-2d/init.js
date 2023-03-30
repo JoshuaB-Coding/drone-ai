@@ -1,7 +1,7 @@
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 400;
 const dt = 0.01; // step size
-const g = 9.81 * 20; // stronger gravity for nicer feel
+const g = 9.81 * 20;
 
 function startGame() {
     var container = document.createElement('div');

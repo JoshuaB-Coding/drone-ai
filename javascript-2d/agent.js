@@ -13,7 +13,7 @@ class Agent {
 
         this.state = [];
 
-        this.TARGET_RESET_TIME = 15000; // ms
+        this.TARGET_RESET_TIME = 5000; // ms
         this.intervalID = setInterval(() => {
                 this.target.generateNewTarget();
             },
