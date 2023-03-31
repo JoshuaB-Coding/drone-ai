@@ -22,9 +22,11 @@ function startGame() {
     var velocityText = document.createElement('p');
     document.body.appendChild(velocityText);
 
-    const N = 50;
-    var evolution = new Evolution(N);
+    const N = 1;
+    var evolution = new Population(N);
     const TRAINING_TIME = 15;
+
+    console.log(evolution);
     
     // Here for when game is setup
     var id = setInterval(function() {
@@ -53,10 +55,10 @@ function startGame() {
             ", pitch: " + Math.round(evolution.agents[displayIndex].drone.theta*180/Math.PI) +
             ", y: " + Math.round(evolution.agents[displayIndex].drone.y*100)/100;
 
-        if (evolution.isFinished()) {
-            console.log('Everyone is dead :(');
-            evolution.resetAll();
-        }
+        // if (evolution.isFinished()) {
+        //     console.log('Everyone is dead :(');
+        //     evolution.resetAll();
+        // }
 
         // Render background first to push it to back
         domain.renderBackground(evolution.agents[displayIndex].drone);

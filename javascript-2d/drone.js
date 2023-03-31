@@ -3,13 +3,13 @@
  */
 
 class Drone {
-    constructor(x = CANVAS_WIDTH / 2, y = CANVAS_HEIGHT / 2) {
+    constructor() {
         this.isAlive = true;
 
         this.m = 50; // kg
         this.Iyy = 500; // kg.m^2
-        this.x = x;
-        this.y = y;
+        this.x = CANVAS_WIDTH / 2;
+        this.y = CANVAS_HEIGHT / 2;
 
         this.img = new Image();
         this.img.src = "drone_boi.png";
@@ -33,6 +33,17 @@ class Drone {
         this.x_CG = 0;
         this.x_f = 1;
         this.x_a = -1;
+    }
+
+    setThrustFromThrottle(throttle) {
+        if (throttle[0] > 1) throttle[0] = 1;
+        else if (throttle[0] < 0) throttle[0] = 0;
+
+        if (throttle[1] > 1) throttle[1] = 1;
+        else if (throttle[1] < 0) throttle[1] = 0;
+
+        this.T_f = throttle[0] * this.MAX_THRUST;
+        this.T_a = throttle[1] * this.MAX_THRUST;
     }
 
     throttleMax() {

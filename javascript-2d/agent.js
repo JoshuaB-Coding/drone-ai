@@ -1,17 +1,15 @@
 class Agent {
-    constructor(x = CANVAS_WIDTH / 2, y = CANVAS_HEIGHT / 2) {
-        this.drone = new Drone(x, y);
+    constructor(layerInformation) {
+        this.drone = new Drone();
         this.target = new Target();
+
+        this.neuralNetwork = new NeuralNetwork(
+            layerInformation,
+            'dense'
+        );
 
         this.cost = 0;
         this.timeAlive = 0;
-
-        this.nInputs = 5;
-        this.nOutputs = 2;
-        this.w = [[], []];
-        this.generateWeights();
-
-        this.state = [];
 
         this.TARGET_RESET_TIME = 5000; // ms
         this.intervalID = setInterval(() => {
@@ -29,7 +27,9 @@ class Agent {
     update() {
         if (!this.drone.isAlive) return;
 
-        this.performAction();
+        const output = this.neuralNetwork.output(this.agentState());
+        // const throttle = this.saturateOutput(output);
+        this.drone.setThrustFromThrottle(output);
         this.drone.updatePosition();
 
         // Approximate cost function
@@ -38,10 +38,12 @@ class Agent {
     }
 
     fitnessFunction() {
-        const q_cost = -Math.abs(this.drone.q) * this.Q_WEIGHTING;
+        const state = this.agentState();
 
-        const dx = this.state[1];
-        const dy = this.state[2];
+        const q_cost = -Math.abs(state[4]) * this.Q_WEIGHTING;
+
+        const dx = state[0];
+        const dy = state[1];
         const distance_cost = -Math.sqrt(dx*dx + dy*dy) * this.DISTANCE_WEIGHTING;
 
         var theta_cost = 0;
@@ -52,47 +54,21 @@ class Agent {
         return total_cost;
     }
 
-    performAction() {
+    agentState() {
         const distance = this.target.getDistance(this.drone);
-        this.state = [
-            this.drone.theta,
-            distance[0],
-            distance[1],
+        return [
+            distance[0], // distance in x
+            distance[1], // distance in y
             this.drone.U,
-            this.drone.W
+            this.drone.W,
+            this.drone.q
         ];
-
-        var T_f = 0;
-        var T_a = 0;
-
-        for (let i = 0; i < this.nInputs; i++) {
-            T_f += this.state[i] * this.w[0][i] * this.drone.MAX_THRUST;
-            T_a += this.state[i] * this.w[1][i] * this.drone.MAX_THRUST;
-        }
-
-        if (T_f < 0) T_f = 0;
-        if (T_a < 0) T_a = 0;
-        
-        this.drone.T_f = T_f > this.drone.MAX_THRUST ? this.drone.MAX_THRUST : T_f;
-        this.drone.T_a = T_a > this.drone.MAX_THRUST ? this.drone.MAX_THRUST : T_a;
-    }
-
-    generateWeights() {
-        for (let i = 0; i < this.nOutputs; i++) {
-            for (let j = 0; j < this.nInputs; j++) {
-                this.w[i][j] = (Math.random() - 0.5) * 2;
-            }
-        }
-    }
-
-    manuallySetWeights(w) {
-        this.w = w;
     }
 
     detectCollision(generation) {
         // If at later generation, assume AI's that crash are worse
         if (this.drone.detectCollision()) {
-            if (generation > 10) this.cost = -Infinity;
+            if (generation > 80) this.cost = -Infinity;
             else this.cost += this.timeAlive * this.TIME_WEIGHTING; // positive score based on time alive
             return true;
         }

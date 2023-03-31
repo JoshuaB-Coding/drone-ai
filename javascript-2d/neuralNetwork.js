@@ -3,15 +3,14 @@
  * - Propagate through the layers given an input to produce the output
  * - Reproduce with another instance of NeuralNetwork
  * - Generate the layers upon initialisation
+ * - For now, all neural networks reproduce sexually
  */
 
 class NeuralNetwork {
     constructor(layerInformation, type = 'dense') {
-        this.nLayers = layerInformation.nLayers;
+        this.numberOfLayers = layerInformation.numberOfLayers;
         this.layers = this.generateLayers(layerInformation);
         this.type = type;
-        this.isSexual = Math.random() > 0.5 ? true : false;
-        this.fitness = 0;
     }
 
     output(state) {
@@ -24,8 +23,9 @@ class NeuralNetwork {
     }
 
     reproduce(neuralNetwork) {
-        if (this.isSexual) return;
-
+        for (let i = 1; i < this.numberOfLayers; i++) {
+            this.layers[i].reproduce(neuralNetwork.layers[i]);
+        }
     }
 
     generateLayers(layerInformation) {
