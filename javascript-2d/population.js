@@ -5,8 +5,8 @@ class Population {
 
         // Neural network geometry
         const numberOfLayers = 2;
-        const layerInputs = [0, 5];
-        const layerOutputs = [5, 2];
+        const layerInputs = [0, 5, 3];
+        const layerOutputs = [5, 3, 2];
         this.layerInformation = new LayerInformation(
             numberOfLayers,
             layerInputs,
@@ -59,26 +59,28 @@ class Population {
         for (let i = 0; i < this.numberOfAgents; i++) {
             if (indices.includes(i)) continue;
 
-
+            const agentIndex = Math.floor(Math.random() * this.NUMBER_OF_BEST_PERFORMERS);
+            this.agents[i].neuralNetwork.reproduce(
+                this.agents[agentIndex].neuralNetwork
+            );
         }
     }
 
     bestPerformers() {
-        // This code is still bad - change later
-        let indices = [0, 0, 0, 0, 0, 0];
-        let bestCost = [0, 0, 0, 0, 0, 0];
+        let indices = [];
+        let bestCost = [];
 
-        bestCost[0] = this.agents[0].cost;
+        // Use first N performers as reference
+        let i;
+        for (i = 0; i < this.NUMBER_OF_BEST_PERFORMERS; i++) {
+            indices.push(i);
+            bestCost.push(this.agents[i].cost);
+        }
 
-        for (let i = 1; i < this.numberOfAgents; i++) {
-            const cost = this.agents[i].cost;
+        for (let j = i; j < this.numberOfAgents; j++) {
+            const cost = this.agents[j].cost;
 
             for (let k = 0; k < this.NUMBER_OF_BEST_PERFORMERS; k++) {
-                if (bestCost[k + 1] === 0) {
-                    bestCost[k + 1] = cost;
-                    indices[k + 1] = i;
-                    break;
-                }
                 if (cost > bestCost[k]) {
                     bestCost[k] = cost;
                     indices[k] = i;

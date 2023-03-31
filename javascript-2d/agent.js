@@ -27,7 +27,10 @@ class Agent {
     update() {
         if (!this.drone.isAlive) return;
 
-        const output = this.neuralNetwork.output(this.agentState());
+        var state = this.agentState();
+        state = this.augmentState(state);
+
+        const output = this.neuralNetwork.output(state);
         // const throttle = this.saturateOutput(output);
         this.drone.setThrustFromThrottle(output);
         this.drone.updatePosition();
@@ -40,7 +43,7 @@ class Agent {
     fitnessFunction() {
         const state = this.agentState();
 
-        const q_cost = -Math.abs(state[4]) * this.Q_WEIGHTING;
+        const q_cost = -Math.abs(this.drone.q) * this.Q_WEIGHTING;
 
         const dx = state[0];
         const dy = state[1];
@@ -61,8 +64,17 @@ class Agent {
             distance[1], // distance in y
             this.drone.U,
             this.drone.W,
-            this.drone.q
+            this.drone.theta
         ];
+    }
+
+    augmentState(state) {
+        // Corrects magnitude of state
+        state[0] = state[0] / 10;
+        state[1] = state[1] / 10;
+        state[2] = state[2] / 1;
+        state[3] = state[3] / 1;
+        return state;
     }
 
     detectCollision(generation) {

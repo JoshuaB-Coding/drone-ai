@@ -29,10 +29,10 @@ class Layer {
             return;
         }
 
-        for (let j = 0; j < this.numberOfOutputs; j++) {
+        for (let i = 0; i < this.numberOfOutputs; i++) {
             var nodeValue = 0;
-            for (let i = 0; i < this.numberOfInputs; i++) {
-                nodeValue += previousLayerNodeValues[i] * this.weights[i][j];
+            for (let j = 0; j < this.numberOfInputs; j++) {
+                nodeValue += previousLayerNodeValues[j] * this.weights[i][j];
             }
             this.nodeValues[i] = nodeValue;
         }
@@ -43,7 +43,7 @@ class Layer {
         for (let i = 0; i < this.numberOfOutputs; i++) {
             var weightsRow = [];
             for (let j = 0; j < this.numberOfInputs; j++) {
-                const weight = Math.random();
+                const weight = (Math.random() - 0.5) * 2;
                 weightsRow.push(weight);
             }
             weights.push(weightsRow);
@@ -53,8 +53,8 @@ class Layer {
 
     reproduce(layer) {
         // Simple averaging of weights to reproduce
-        for (let i = 0; i < this.numberOfInputs; i++) {
-            for (let j = 0; j < this.numberOfOutputs; j++) {
+        for (let i = 0; i < this.numberOfOutputs; i++) {
+            for (let j = 0; j < this.numberOfInputs; j++) {
                 const newWeight = (this.weights[i][j] + layer.weights[i][j]) / 2;
                 this.mutate(i, j);
             }
@@ -68,7 +68,7 @@ class Layer {
         const newWeight = this.weights[index1][index2] + mutation;
 
         if (newWeight > 1) this.weights[index1][index2] = 1;
-        else if (newWeight < 0) this.weights[index1][index2] = 0;
+        else if (newWeight < -1) this.weights[index1][index2] = -1;
         else this.weights[index1][index2] = newWeight;
     }
 };

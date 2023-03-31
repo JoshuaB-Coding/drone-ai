@@ -15,9 +15,9 @@ class NeuralNetwork {
 
     output(state) {
         var previousLayerNodeValues = state;
-        for (layer of this.layers) {
-            layer.updateLayer(previousLayerNodeValues);
-            previousLayerNodeValues = layer.nodeValues;
+        for (let i = 0; i < this.numberOfLayers; i++) {
+            this.layers[i].updateLayer(previousLayerNodeValues);
+            previousLayerNodeValues = this.layers[i].nodeValues;
         }
         return previousLayerNodeValues;
     }
@@ -30,11 +30,11 @@ class NeuralNetwork {
 
     generateLayers(layerInformation) {
         var layers = [];
-        for (let i = 0; i < layerInformation.nLayers; i++) {
-            const nInputs = layerInformation.layerInputs[i];
-            const nOutputs = layerInformation.layerOutputs[i];
+        for (let i = 0; i < layerInformation.numberOfLayers; i++) {
+            const numberOfInputs = layerInformation.layerInputs[i];
+            const numberOfOutputs = layerInformation.layerOutputs[i];
             
-            layers.push(new Layer(nInputs, nOutputs));
+            layers.push(new Layer(numberOfInputs, numberOfOutputs));
         }
         return layers;
     }

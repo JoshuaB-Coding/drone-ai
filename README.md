@@ -52,6 +52,7 @@ The basic implementation of the AI evolution has been added and 'works'. However
 - [ ] Figure out the most sensible way to split up the methods contained within `Evolution`, `Agent`, `Drone` and `Target`
   - [ ] These changes should be listed down here
 - [ ] Introduce a better way to store the global constants that exist at the top of `init.js`
+- [x] Create `NeuralNetwork` and `Layer` classes to make the AI code more reusable
 
 Alongside the main features, various improvements to the UI and algorithms are to be made. These are listed below for sake of keeping track:
 - [x] Including a background which moves with the player, making movement feel faster
