@@ -46,7 +46,7 @@ class Evolution {
         const nInputs = this.agents[0].nInputs;
 
         for (let i = 0; i < this.N; i++) {
-            if (i in indices) continue;
+            if (indices.includes(i)) continue;
 
             var w = [[], []];
 
