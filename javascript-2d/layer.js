@@ -55,7 +55,11 @@ class Layer {
         // Simple averaging of weights to reproduce
         for (let i = 0; i < this.numberOfOutputs; i++) {
             for (let j = 0; j < this.numberOfInputs; j++) {
-                const newWeight = (this.weights[i][j] + layer.weights[i][j]) / 2;
+                // Reproduction method
+                // const newWeight = (this.weights[i][j] + layer.weights[i][j]) / 2;
+                const newWeight = Math.random() > 0.5 ? this.weights[i][j] : layer.weights[i][j];
+
+                this.weights[i][j] = newWeight;
                 this.mutate(i, j);
             }
         }
@@ -64,7 +68,7 @@ class Layer {
     mutate(index1, index2) {
         if (Math.random() < this.MUTATION_CHANCE) return;
 
-        const mutation = (Math.random() - 0.5) * 2;
+        const mutation = (Math.random() - 0.5) * 0.1;
         const newWeight = this.weights[index1][index2] + mutation;
 
         if (newWeight > 1) this.weights[index1][index2] = 1;

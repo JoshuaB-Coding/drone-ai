@@ -53,6 +53,7 @@ The basic implementation of the AI evolution has been added and 'works'. However
   - [ ] These changes should be listed down here
 - [ ] Introduce a better way to store the global constants that exist at the top of `init.js`
 - [x] Create `NeuralNetwork` and `Layer` classes to make the AI code more reusable
+- [ ] Make the cost function reward players for interacting with targets rather than punishing them for being far away from it
 
 Alongside the main features, various improvements to the UI and algorithms are to be made. These are listed below for sake of keeping track:
 - [x] Including a background which moves with the player, making movement feel faster
@@ -60,3 +61,4 @@ Alongside the main features, various improvements to the UI and algorithms are t
 - [ ] Changing the style of the border to make it look nicer
 - [ ] Allow for changing the size of the play area and scale everything with that
 - [ ] Improve graphics and add extra choices for backgrounds and drone
+- [ ] Display the current neural network setup on screen

@@ -20,7 +20,7 @@ class Agent {
 
         this.DISTANCE_WEIGHTING = 1 / 100;
         this.INVERTED_COST = 300;
-        this.TIME_WEIGHTING = 20;
+        this.TIME_WEIGHTING = 1;
         this.Q_WEIGHTING = 100;
     }
 
@@ -54,7 +54,10 @@ class Agent {
 
         const total_cost = q_cost + distance_cost + theta_cost;
 
-        return total_cost;
+        var total_fitness = 0;
+        if (Math.sqrt(dx*dx + dy*dy) < 1) total_fitness = 10;
+
+        return total_fitness;
     }
 
     agentState() {
@@ -62,7 +65,7 @@ class Agent {
         return [
             distance[0], // distance in x
             distance[1], // distance in y
-            this.drone.U,
+            this.drone.U * 0,
             this.drone.W,
             this.drone.theta
         ];
@@ -80,8 +83,8 @@ class Agent {
     detectCollision(generation) {
         // If at later generation, assume AI's that crash are worse
         if (this.drone.detectCollision()) {
-            if (generation > 80) this.cost = -Infinity;
-            else this.cost += this.timeAlive * this.TIME_WEIGHTING; // positive score based on time alive
+            // if (generation > 80) this.cost = -Infinity;
+            this.cost += this.timeAlive * this.TIME_WEIGHTING; // positive score based on time alive
             return true;
         }
         return false;

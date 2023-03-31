@@ -5,8 +5,8 @@ class Population {
 
         // Neural network geometry
         const numberOfLayers = 2;
-        const layerInputs = [0, 5, 3];
-        const layerOutputs = [5, 3, 2];
+        const layerInputs = [0, 5];
+        const layerOutputs = [5, 2];
         this.layerInformation = new LayerInformation(
             numberOfLayers,
             layerInputs,
@@ -18,8 +18,8 @@ class Population {
             this.agents.push(new Agent(this.layerInformation));
         }
 
-        // Select the best agents from 20% of the population
-        this.NUMBER_OF_BEST_PERFORMERS = Math.floor(this.numberOfAgents / 5);
+        // Select the best agents from 10% of the population
+        this.NUMBER_OF_BEST_PERFORMERS = Math.floor(this.numberOfAgents / 10);
     }
 
     isFinished() {
