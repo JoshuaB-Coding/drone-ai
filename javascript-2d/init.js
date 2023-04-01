@@ -22,7 +22,7 @@ function startGame() {
     // var velocityText = document.createElement('p');
     // document.body.appendChild(velocityText);
 
-    const N = 100;
+    const N = 50;
     var evolution = new Population(N);
     const TRAINING_TIME = 15;
 
@@ -60,7 +60,17 @@ function startGame() {
 
         // Render background first to push it to back
         domain.renderBackground(evolution.agents[displayIndex].drone);
+
+        for (agent of evolution.agents) {
+            agent.render(domain.context);
+        }
+
+        // Display best agent at front with main focus
         evolution.agents[displayIndex].render(domain.context);
+        // console.log([
+        //     evolution.agents[displayIndex].drone.T_f / evolution.agents[displayIndex].drone.MAX_THRUST,
+        //     evolution.agents[displayIndex].drone.T_a / evolution.agents[displayIndex].drone.MAX_THRUST
+        // ]);
     }, dt * 1000);
 }
 

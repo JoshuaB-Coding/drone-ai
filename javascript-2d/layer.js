@@ -20,7 +20,7 @@ class Layer {
 
         this.weights = this.initialiseWeights();
 
-        this.MUTATION_CHANCE = 0.05;
+        this.MUTATION_CHANCE = 0.001;
     }
 
     updateLayer(previousLayerNodeValues) {
@@ -51,13 +51,21 @@ class Layer {
         return weights;
     }
 
+    copyLayer(layer) {
+        for (let i = 0; i < this.numberOfOutputs; i++) {
+            for (let j = 0; j < this.numberOfInputs; j++) {
+                this.weights[i][j] = layer.weights[i][j];
+            }
+        }
+    }
+
     reproduce(layer) {
         // Simple averaging of weights to reproduce
         for (let i = 0; i < this.numberOfOutputs; i++) {
             for (let j = 0; j < this.numberOfInputs; j++) {
                 // Reproduction method
-                // const newWeight = (this.weights[i][j] + layer.weights[i][j]) / 2;
-                const newWeight = Math.random() > 0.5 ? this.weights[i][j] : layer.weights[i][j];
+                const newWeight = (this.weights[i][j] + layer.weights[i][j]) / 2;
+                // const newWeight = Math.random() > 0.5 ? this.weights[i][j] : layer.weights[i][j];
 
                 this.weights[i][j] = newWeight;
                 this.mutate(i, j);

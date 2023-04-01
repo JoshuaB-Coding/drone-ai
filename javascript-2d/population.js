@@ -18,8 +18,8 @@ class Population {
             this.agents.push(new Agent(this.layerInformation));
         }
 
-        // Select the best agents from 10% of the population
-        this.NUMBER_OF_BEST_PERFORMERS = Math.floor(this.numberOfAgents / 10);
+        // Select the best agents from 5% of the population
+        this.NUMBER_OF_BEST_PERFORMERS = Math.floor(this.numberOfAgents / 20);
     }
 
     isFinished() {
@@ -59,9 +59,11 @@ class Population {
         for (let i = 0; i < this.numberOfAgents; i++) {
             if (indices.includes(i)) continue;
 
-            const agentIndex = Math.floor(Math.random() * this.NUMBER_OF_BEST_PERFORMERS);
-            this.agents[i].neuralNetwork.reproduce(
-                this.agents[agentIndex].neuralNetwork
+            const firstParentIndex = Math.floor(Math.random() * this.NUMBER_OF_BEST_PERFORMERS);
+            const secondParentIndex = Math.floor(Math.random() * this.NUMBER_OF_BEST_PERFORMERS);
+
+            this.agents[i].neuralNetwork = this.agents[firstParentIndex].neuralNetwork.createChild(
+                this.agents[secondParentIndex].neuralNetwork
             );
         }
     }

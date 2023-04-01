@@ -11,7 +11,7 @@ class Agent {
         this.cost = 0;
         this.timeAlive = 0;
 
-        this.TARGET_RESET_TIME = 5000; // ms
+        this.TARGET_RESET_TIME = 15000; // ms
         this.intervalID = setInterval(() => {
                 this.target.generateNewTarget();
             },
@@ -73,10 +73,10 @@ class Agent {
 
     augmentState(state) {
         // Corrects magnitude of state
-        state[0] = state[0] / 10;
-        state[1] = state[1] / 10;
-        state[2] = state[2] / 1;
-        state[3] = state[3] / 1;
+        state[0] = state[0] / 20;
+        state[1] = state[1] / 20;
+        state[2] = state[2] / 5;
+        state[3] = state[3] / 5;
         return state;
     }
 
