@@ -69,7 +69,23 @@ class Drone {
         this.T_f = this.MAX_THRUST * 0.8;
     }
 
-    render(ctx) {
+    render(ctx, drone) {
+        // AIMING to fix bug with plotting drones - they are all plotted in canvas centered coordinates, not drone centered
+        var xDrone = 0;
+        var yDrone = 0;
+        if (drone) {
+            xDrone = -CANVAS_WIDTH + (drone.x - CANVAS_WIDTH / 2) * 2;
+            yDrone = this.y - (drone.y - CANVAS_HEIGHT / 2) * 2;
+        }
+
+        // CHECK THIS CODE LATER
+        const originalX = -this.width / 2;
+        const originalY = -this.height / 2;
+
+        const rotatedX = originalX * Math.cos(this.theta) + originalY * Math.sin(this.theta);
+        const rotatedY = -originalX * Math.sin(this.theta) + originalY * Math.cos(this.theta);
+
+        // Drones flying upside down - issue with rendering and drawing image at wrong coordinates in rotated frame
         ctx.translate(this.x, this.y);
         ctx.rotate(this.theta);
         ctx.drawImage(this.img, -this.width / 2, -this.height / 2);

@@ -42,18 +42,22 @@ After adding the `Agent` class, it is time to introduce the evolution algorithm.
   - [x] Store a list of agents
   - [x] Include a method to detect whether or not a generation has finished
   - [x] Include a method to create a new generation from the best performing agents of the previous generation
-  - [ ] Include a small mutation chance for the next generation
+  - [x] Include a small mutation chance for the next generation
 - [x] Only render one of the agents at a time (ideally the first)
 - [x] Keep track of the best agent coefficients at each iteration
 - [ ] Display the best scores of the previous and current generations on screen
 
 The basic implementation of the AI evolution has been added and 'works'. However, the current code base is quite messy and so the next aim is to refactor the code to make it easier to navigate and update in the future. Listed below are items which need to be changed - any extra changes made during refactoring should be added to this list.
 - [ ] Change the 'init.js' file into two files that split up the `domain` object and `startGame()` function
-- [ ] Figure out the most sensible way to split up the methods contained within `Evolution`, `Agent`, `Drone` and `Target`
-  - [ ] These changes should be listed down here
+- [ ] Split up the methods contained within `Evolution`, `Agent`, `Drone` and `Target` in a more sensible way
 - [ ] Introduce a better way to store the global constants that exist at the top of `init.js`
 - [x] Create `NeuralNetwork` and `Layer` classes to make the AI code more reusable
-- [ ] Make the cost function reward players for interacting with targets rather than punishing them for being far away from it
+- [x] Make the cost function reward players for interacting with targets rather than punishing them for being far away from it
+- [ ] Have each drone train from the same target (ie. store the instance of `Target` in the agent rather than in the drone)
+- [ ] Introduce an extra weighting into the neural network to scale the input signal
+- [ ] Have the mutation chance be a function of how far away the current agent score is from the best score
+- [ ] Display all drones on screen with focus on the main drone
+  - [ ] This requires each drones position to need to be put relative to the main drone
 
 Alongside the main features, various improvements to the UI and algorithms are to be made. These are listed below for sake of keeping track:
 - [x] Including a background which moves with the player, making movement feel faster
@@ -62,3 +66,4 @@ Alongside the main features, various improvements to the UI and algorithms are t
 - [ ] Allow for changing the size of the play area and scale everything with that
 - [ ] Improve graphics and add extra choices for backgrounds and drone
 - [ ] Display the current neural network setup on screen
+- [ ] Add sounds to the game to make it more fun to watch

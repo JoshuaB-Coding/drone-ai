@@ -36,11 +36,10 @@ function startGame() {
         for (let i = 0; i < N; i++) {
             if (!evolution.agents[i].drone.isAlive) continue;
 
-            evolution.agents[i].update();
+            evolution.agents[i].update(evolution.target);
 
             if (evolution.agents[i].detectCollision(evolution.generation) || evolution.agents[i].timeAlive > TRAINING_TIME) {
                 // console.log('Drone ', i, ' died :(');
-                evolution.agents[i].clearTargetInterval();
                 evolution.agents[i].drone.isAlive = false;
             }
         }
@@ -61,12 +60,8 @@ function startGame() {
         // Render background first to push it to back
         domain.renderBackground(evolution.agents[displayIndex].drone);
 
-        for (agent of evolution.agents) {
-            agent.render(domain.context);
-        }
+        evolution.render(domain.context);
 
-        // Display best agent at front with main focus
-        evolution.agents[displayIndex].render(domain.context);
         // console.log([
         //     evolution.agents[displayIndex].drone.T_f / evolution.agents[displayIndex].drone.MAX_THRUST,
         //     evolution.agents[displayIndex].drone.T_a / evolution.agents[displayIndex].drone.MAX_THRUST

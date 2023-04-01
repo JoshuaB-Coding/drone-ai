@@ -13,13 +13,19 @@ class Population {
             layerOutputs
         );
 
+        // Setting up target
+        this.target = new Target();
+        this.TARGET_RESET_TIME = 15000; // ms
+        this.intervalID = this.setTargetInterval();
+
         this.agents = [];
         for (let i = 0; i < N; i++) {
             this.agents.push(new Agent(this.layerInformation));
         }
 
-        // Select the best agents from 5% of the population
-        this.NUMBER_OF_BEST_PERFORMERS = Math.floor(this.numberOfAgents / 20);
+        // Select the best agents from x% of the population
+        const x = 25;
+        this.NUMBER_OF_BEST_PERFORMERS = Math.floor(this.numberOfAgents * x / 100);
     }
 
     isFinished() {
@@ -42,6 +48,9 @@ class Population {
     }
     
     resetAll() {
+        this.clearTargetInterval();
+        this.target.reset();
+        
         for (let i = 0; i < this.N; i++) {
             if (!this.agents[i].drone.isAlive) continue;
             this.agents[i].cost += this.agents[i].timeAlive * this.agents[i].TIME_WEIGHTING;
@@ -51,6 +60,20 @@ class Population {
             this.agents[i].reset();
         }
         this.generation += 1;
+
+        this.intervalID = this.setTargetInterval();
+    }
+
+    setTargetInterval() {
+        return setInterval(() => {
+                this.target.generateNewTarget();
+            },
+            this.TARGET_RESET_TIME
+        );
+    }
+
+    clearTargetInterval() {
+        clearInterval(this.intervalID);
     }
 
     nextGeneration() {
@@ -94,5 +117,20 @@ class Population {
         console.log(bestCost);
 
         return indices;
+    }
+
+    render(ctx) {
+        const bestAgentIndex = this.bestCurrentAgent();
+        for (const agent of this.agents) {
+            agent.drone.render(ctx);
+        }
+
+        // Center on the best current performer
+        this.agents[bestAgentIndex].drone.render(ctx);
+
+        this.target.render(
+            domain.context,
+            this.agents[bestAgentIndex].drone
+        );
     }
 };

@@ -8,15 +8,25 @@
  */
 
 class NeuralNetwork {
-    constructor(layerInformation, type = 'dense') {
+    constructor(layerInformation, type = 'dense', maximumScaleFactors) {
         this.layerInformation = layerInformation;
         this.numberOfLayers = layerInformation.numberOfLayers;
         this.layers = this.generateLayers(layerInformation);
         this.type = type;
+
+        this.scaleFactors = [];
+        if (maximumScaleFactors) {
+            for (const maximumScaleFactor of maximumScaleFactors) {
+                this.scaleFactors.push(
+                    Math.random() * maximumScaleFactor
+                );
+            }
+        }
+
     }
 
     output(state) {
-        var previousLayerNodeValues = state;
+        var previousLayerNodeValues = this.scaleState(state);
         for (let i = 0; i < this.numberOfLayers; i++) {
             this.layers[i].updateLayer(previousLayerNodeValues);
             previousLayerNodeValues = this.layers[i].nodeValues;
@@ -24,9 +34,20 @@ class NeuralNetwork {
         return previousLayerNodeValues;
     }
 
+    scaleState(state) {
+        var scaledState = [];
+        for (let i = 0; i < this.layers[0].numberOfOutputs; i++) {
+            scaledState.push(state[i] * this.scaleFactors[i]);
+        }
+        return scaledState;
+    }
+
     reproduce(neuralNetwork) {
         for (let i = 1; i < this.numberOfLayers; i++) {
+            // Reproduce layers
             this.layers[i].reproduce(neuralNetwork.layers[i]);
+
+            // Reproduce scale factors - add later
         }
     }
 
@@ -42,6 +63,11 @@ class NeuralNetwork {
 
         // Reproduce with input neural network
         childNetwork.reproduce(neuralNetwork);
+
+        // Manually reproducing scale factors
+        for (let i = 0; i < this.layers[0].numberOfOutputs; i++) {
+            childNetwork.scaleFactors[i] = ( this.scaleFactors[i] + neuralNetwork.scaleFactors[i] ) / 2;
+        }
 
         return childNetwork;
     }

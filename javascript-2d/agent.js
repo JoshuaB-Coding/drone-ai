@@ -1,22 +1,22 @@
 class Agent {
     constructor(layerInformation) {
         this.drone = new Drone();
-        this.target = new Target();
 
+        const maximumScaleFactors = [
+            1600, // x distance
+            1600, // y distance
+            200, // U velocity
+            200, // W velocity
+            Math.PI // pitch angle
+        ];
         this.neuralNetwork = new NeuralNetwork(
             layerInformation,
-            'dense'
+            'dense',
+            maximumScaleFactors
         );
 
         this.cost = 0;
         this.timeAlive = 0;
-
-        this.TARGET_RESET_TIME = 15000; // ms
-        this.intervalID = setInterval(() => {
-                this.target.generateNewTarget();
-            },
-            this.TARGET_RESET_TIME
-        );
 
         this.DISTANCE_WEIGHTING = 1 / 100;
         this.INVERTED_COST = 300;
@@ -24,11 +24,10 @@ class Agent {
         this.Q_WEIGHTING = 100;
     }
 
-    update() {
+    update(target) {
         if (!this.drone.isAlive) return;
 
-        var state = this.agentState();
-        state = this.augmentState(state);
+        var state = this.agentState(target);
 
         const output = this.neuralNetwork.output(state);
         // const throttle = this.saturateOutput(output);
@@ -36,12 +35,12 @@ class Agent {
         this.drone.updatePosition();
 
         // Approximate cost function
-        this.cost += this.fitnessFunction();
+        this.cost += this.fitnessFunction(target);
         this.timeAlive += dt;
     }
 
-    fitnessFunction() {
-        const state = this.agentState();
+    fitnessFunction(target) {
+        const state = this.agentState(target);
 
         const q_cost = -Math.abs(this.drone.q) * this.Q_WEIGHTING;
 
@@ -60,8 +59,8 @@ class Agent {
         return total_fitness;
     }
 
-    agentState() {
-        const distance = this.target.getDistance(this.drone);
+    agentState(target) {
+        const distance = target.getDistance(this.drone);
         return [
             distance[0], // distance in x
             distance[1], // distance in y
@@ -69,15 +68,6 @@ class Agent {
             this.drone.W,
             this.drone.theta
         ];
-    }
-
-    augmentState(state) {
-        // Corrects magnitude of state
-        state[0] = state[0] / 20;
-        state[1] = state[1] / 20;
-        state[2] = state[2] / 5;
-        state[3] = state[3] / 5;
-        return state;
     }
 
     detectCollision(generation) {
@@ -90,22 +80,11 @@ class Agent {
         return false;
     }
 
-    clearTargetInterval() {
-        clearInterval(this.intervalID);
-    }
-
     reset() {
         // this.generateWeights();
-        this.clearTargetInterval();
-        this.target.reset();
         this.drone.reset();
         this.timeAlive = 0;
         this.cost = 0;
-        this.intervalID = setInterval(() => {
-                this.target.generateNewTarget();
-            },
-            this.TARGET_RESET_TIME
-        );
     }
 
     render(ctx) {

@@ -20,7 +20,8 @@ class Layer {
 
         this.weights = this.initialiseWeights();
 
-        this.MUTATION_CHANCE = 0.001;
+        this.MUTATION_CHANCE = 0.1;
+        this.MUTATION_SEVERITY = 0.2;
     }
 
     updateLayer(previousLayerNodeValues) {
@@ -76,7 +77,7 @@ class Layer {
     mutate(index1, index2) {
         if (Math.random() < this.MUTATION_CHANCE) return;
 
-        const mutation = (Math.random() - 0.5) * 0.1;
+        const mutation = (Math.random() - 0.5) * this.MUTATION_SEVERITY;
         const newWeight = this.weights[index1][index2] + mutation;
 
         if (newWeight > 1) this.weights[index1][index2] = 1;
