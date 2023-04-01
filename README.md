@@ -66,4 +66,4 @@ Alongside the main features, various improvements to the UI and algorithms are t
 - [ ] Allow for changing the size of the play area and scale everything with that
 - [ ] Improve graphics and add extra choices for backgrounds and drone
 - [ ] Display the current neural network setup on screen
-- [ ] Add sounds to the game to make it more fun to watch
+- [x] Add sounds to the game to make it more fun to watch
