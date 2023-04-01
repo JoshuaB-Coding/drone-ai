@@ -22,6 +22,9 @@ function startGame() {
     // var velocityText = document.createElement('p');
     // document.body.appendChild(velocityText);
 
+    var playButton = document.createElement('button');
+    document.body.appendChild(playButton);
+
     const N = 50;
     var evolution = new Population(N);
     const TRAINING_TIME = 15;

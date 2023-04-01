@@ -22,6 +22,8 @@ class Agent {
         this.INVERTED_COST = 300;
         this.TIME_WEIGHTING = 1;
         this.Q_WEIGHTING = 100;
+
+        this.sound1 = new Audio('./Sounds/ouch.mp3');
     }
 
     update(target) {
@@ -74,6 +76,7 @@ class Agent {
         // If at later generation, assume AI's that crash are worse
         if (this.drone.detectCollision()) {
             // if (generation > 80) this.cost = -Infinity;
+            this.sound1.play();
             this.cost += this.timeAlive * this.TIME_WEIGHTING; // positive score based on time alive
             return true;
         }
