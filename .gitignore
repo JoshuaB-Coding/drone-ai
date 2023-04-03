@@ -1,3 +1,6 @@
 # cpp files
 *.o
 *drone
+
+# other files
+.vscode
