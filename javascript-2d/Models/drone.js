@@ -12,7 +12,7 @@ class Drone {
         this.y = CANVAS_HEIGHT / 2;
 
         this.img = new Image();
-        this.img.src = "drone_boi.png";
+        this.img.src = "./Assets/drone_boi.png";
 
         this.width = 60;
         this.height = 40;

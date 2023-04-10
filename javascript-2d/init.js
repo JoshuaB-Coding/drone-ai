@@ -3,6 +3,8 @@ const CANVAS_HEIGHT = 400;
 const dt = 0.01; // step size
 const g = 9.81 * 20;
 
+// TODO: add notification which appears on screen when user launches so that sound can be played
+
 function startGame() {
     var container = document.createElement('div');
     container.setAttribute('id', 'container');
@@ -22,9 +24,12 @@ function startGame() {
     // var velocityText = document.createElement('p');
     // document.body.appendChild(velocityText);
 
-    const N = 50;
+    // Warn user that audio is played
+    window.confirm("Audio is played during this game");
+
+    const N = 100;
     var evolution = new Population(N);
-    const TRAINING_TIME = 15;
+    const TRAINING_TIME = 10;
 
     // Here for when game is setup
     var id = setInterval(function() {
@@ -78,7 +83,7 @@ var domain = {
         this.context = this.canvas.getContext("2d");
         parent.appendChild(this.canvas);
 
-        this.background_image.src = "background_1.png";
+        this.background_image.src = "./Assets/background_1.png";
     },
     renderBackground(drone) {
         // Currently doesn't scale with grid size - need to fix this
