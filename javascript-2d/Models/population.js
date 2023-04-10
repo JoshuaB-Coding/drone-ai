@@ -15,7 +15,7 @@ class Population {
 
         // Setting up target
         this.target = new Target();
-        this.TARGET_RESET_TIME = 15000; // ms
+        this.TARGET_RESET_TIME = 10000; // ms
         this.intervalID = this.setTargetInterval();
 
         this.agents = [];
@@ -26,6 +26,8 @@ class Population {
         // Select the best agents from x% of the population
         const x = 25;
         this.NUMBER_OF_BEST_PERFORMERS = Math.floor(this.numberOfAgents * x / 100);
+
+        this.pointTargetProbability = 1.0;
     }
 
     isFinished() {
@@ -50,6 +52,8 @@ class Population {
     resetAll() {
         this.clearTargetInterval();
         this.target.reset();
+        // this.pointTargetProbability = 0.5 * (1 - Math.exp( -0.005 * (this.generation - 1) ));
+        console.log("Point target probability: ", this.pointTargetProbability);
         
         for (let i = 0; i < this.N; i++) {
             if (!this.agents[i].drone.isAlive) continue;
@@ -66,7 +70,7 @@ class Population {
 
     setTargetInterval() {
         return setInterval(() => {
-                this.target.generateNewTarget();
+                this.target.generateNewTarget(this.POINT_TARGET_PROBABILITY);
             },
             this.TARGET_RESET_TIME
         );
@@ -114,23 +118,26 @@ class Population {
             }
         }
 
-        console.log(bestCost);
+        console.log(Math.max(...bestCost));
 
         return indices;
     }
 
     render(ctx) {
         const bestAgentIndex = this.bestCurrentAgent();
+
+        // Render target first
+        this.target.render(
+            domain.context,
+            this.agents[bestAgentIndex].drone
+        );
+
+        // Render all drones
         for (const agent of this.agents) {
             agent.drone.render(ctx);
         }
 
         // Center on the best current performer
         this.agents[bestAgentIndex].drone.render(ctx);
-
-        this.target.render(
-            domain.context,
-            this.agents[bestAgentIndex].drone
-        );
     }
 };

@@ -27,9 +27,9 @@ function startGame() {
     // Warn user that audio is played
     window.confirm("Audio is played during this game");
 
-    const N = 50;
+    const N = 100;
     var evolution = new Population(N);
-    const TRAINING_TIME = 30;
+    const TRAINING_TIME = 10;
 
     // Here for when game is setup
     var id = setInterval(function() {
@@ -83,7 +83,7 @@ var domain = {
         this.context = this.canvas.getContext("2d");
         parent.appendChild(this.canvas);
 
-        this.background_image.src = "background_1.png";
+        this.background_image.src = "./Assets/background_1.png";
     },
     renderBackground(drone) {
         // Currently doesn't scale with grid size - need to fix this

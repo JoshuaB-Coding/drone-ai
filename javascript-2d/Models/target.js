@@ -5,20 +5,19 @@ class Target {
 
         this.colour = 'red';
 
-        this.generateNewTarget();
+        this.generateNewTarget(1.0);
     }
 
-    generateNewTarget() {
-        if (Math.random() > 0.5) {
+    generateNewTarget(pointTargetProbability) {
+        if (Math.random() < pointTargetProbability) {
             this.type = 'point';
         }
         else {
             this.type = 'line';
         }
-        this.type = 'line';
 
-        this.x = (Math.random() - 1/3) * 3 * CANVAS_WIDTH;
-        this.y = (Math.random() - 1/3) * 3 * CANVAS_HEIGHT;
+        this.x = (0.2 * Math.random() + 0.4) * CANVAS_WIDTH; // (Math.random() - 1/3) * 3
+        this.y = (0.2 * Math.random() + 0.4) * CANVAS_HEIGHT; // (Math.random() - 1/3) * 3
     }
 
     getDistance(drone) {
@@ -32,7 +31,7 @@ class Target {
     }
 
     reset() {
-        this.generateNewTarget();
+        this.generateNewTarget(1.0);
     }
 
     setLineColour(drone) {
