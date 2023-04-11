@@ -1,10 +1,3 @@
-/*
- * List of things this class should do:
- * - Update the current layer given the node values of the previous layer
- * - Generate random weightings when a Layer is initialised
- * - Set the weights to custom values provided an input is given
- */
-
 class Layer {
     constructor(numberOfInputs, numberOfOutputs) {
         this.numberOfInputs = numberOfInputs;
@@ -20,8 +13,8 @@ class Layer {
 
         this.weights = this.initialiseWeights();
 
-        this.MUTATION_CHANCE = 0.1;
-        this.MUTATION_SEVERITY = 0.2;
+        this.MUTATION_CHANCE = 0.05;
+        this.MUTATION_SEVERITY = 0.5;
     }
 
     updateLayer(previousLayerNodeValues) {
@@ -77,19 +70,20 @@ class Layer {
     mutate(index1, index2) {
         if (Math.random() < this.MUTATION_CHANCE) return;
 
-        const mutation = (Math.random() - 0.5) * this.MUTATION_SEVERITY;
-        const newWeight = this.weights[index1][index2] + mutation;
+        // Mutate relative to current weight magnitude
+        const mutation = 1 + 2 * (Math.random() - 0.5) * this.MUTATION_SEVERITY;
+        const newWeight = this.weights[index1][index2] * mutation;
 
         if (newWeight > 1) this.weights[index1][index2] = 1;
         else if (newWeight < -1) this.weights[index1][index2] = -1;
         else this.weights[index1][index2] = newWeight;
     }
-};
 
-class LayerInformation {
-    constructor(numberOfLayers, layerInputs, layerOutputs) {
-        this.numberOfLayers = numberOfLayers;
-        this.layerInputs = layerInputs;
-        this.layerOutputs = layerOutputs;
+    mutateAll() {
+        for (let i = 0; i < this.numberOfOutputs; i++) {
+            for (let j = 0; j < this.numberOfInputs; j++) {
+                this.mutate(i, j);
+            }
+        }
     }
 };

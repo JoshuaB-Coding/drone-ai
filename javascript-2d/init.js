@@ -6,14 +6,13 @@ const g = 9.81 * 20;
 // TODO: add notification which appears on screen when user launches so that sound can be played
 
 function startGame() {
+    Assets.setup();
+
     var container = document.createElement('div');
     container.setAttribute('id', 'container');
     document.body.appendChild(container);
 
     domain.setup(container);
-
-    document.body.addEventListener('keydown', (e) => domain.registerKeyDown(e, agent));
-    document.body.addEventListener('keyup', (e) => domain.registerKeyUp(e, agent));
 
     var evolutionText = document.createElement('h1');
     document.body.appendChild(evolutionText);
@@ -72,77 +71,4 @@ function startGame() {
         //     evolution.agents[displayIndex].drone.T_a / evolution.agents[displayIndex].drone.MAX_THRUST
         // ]);
     }, dt * 1000);
-}
-
-var domain = {
-    canvas: document.createElement("canvas"),
-    background_image: new Image(),
-    setup: function(parent) {
-        this.canvas.width = CANVAS_WIDTH;
-        this.canvas.height = CANVAS_HEIGHT;
-        this.context = this.canvas.getContext("2d");
-        parent.appendChild(this.canvas);
-
-        this.background_image.src = "./Assets/background_1.png";
-    },
-    renderBackground(drone) {
-        // Currently doesn't scale with grid size - need to fix this
-        const X = [-CANVAS_WIDTH, 0, CANVAS_WIDTH];
-        const Y = [-CANVAS_HEIGHT, 0, CANVAS_HEIGHT];
-
-        // Adding drone position
-        for (let i = 0; i < 3; i++) {
-            X[i] -= (drone.x - CANVAS_WIDTH / 2) * 2;
-            Y[i] -= (drone.y - CANVAS_HEIGHT / 2) * 2;
-        }
-
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                this.context.drawImage(this.background_image, X[i], Y[j], CANVAS_WIDTH, CANVAS_HEIGHT);
-            }
-        }
-    },
-    registerKeyDown: function(e, agent) {
-        const drone = agent.drone;
-        switch(e.code) {
-            case 'ArrowRight':
-                drone.throttleRight();
-                break;
-            case 'ArrowLeft':
-                drone.throttleLeft();
-                break;
-            case 'ArrowUp':
-                drone.throttleMax();
-                break;
-            case 'ArrowDown':
-                drone.throttleMin();
-                break;
-            default:
-                console.log('None arrow key pressed!');
-                break;
-        }
-    },
-    registerKeyUp: function(e, agent) {
-        const drone = agent.drone;
-        switch(e.code) {
-            case 'ArrowRight':
-                drone.throttleHover();
-                break;
-            case 'ArrowLeft':
-                drone.throttleHover();
-                break;
-            case 'ArrowUp':
-                drone.throttleHover();
-                break;
-            case 'ArrowDown':
-                drone.throttleHover();
-                break;
-            default:
-                console.log('None arrow key up!');
-                break;
-        }
-    },
-    resetCanvas: function() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
 }

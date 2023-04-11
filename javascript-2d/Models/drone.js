@@ -11,8 +11,7 @@ class Drone {
         this.x = CANVAS_WIDTH / 2;
         this.y = CANVAS_HEIGHT / 2;
 
-        this.img = new Image();
-        this.img.src = "./Assets/drone_boi.png";
+        this.img = Assets.droneImage;
 
         this.width = 60;
         this.height = 40;
@@ -23,7 +22,7 @@ class Drone {
         this.theta = 0;
 
         this.HOVER_THRUST = this.m * g / 2;
-        this.MAX_THRUST = this.HOVER_THRUST * 3;
+        this.MAX_THRUST = this.HOVER_THRUST * 1.5;
         this.MIN_THRUST = 0;
         this.DRAG_FACTOR = 0.8;
 
@@ -31,8 +30,8 @@ class Drone {
         this.T_a = this.T_f;
 
         this.x_CG = 0;
-        this.x_f = 1;
-        this.x_a = -1;
+        this.x_f = 0.1;
+        this.x_a = -0.1;
     }
 
     setThrustFromThrottle(throttle) {
@@ -44,29 +43,6 @@ class Drone {
 
         this.T_f = throttle[0] * this.MAX_THRUST;
         this.T_a = throttle[1] * this.MAX_THRUST;
-    }
-
-    throttleMax() {
-        this.T_f = this.MAX_THRUST;
-        this.T_a = this.MAX_THRUST;
-    }
-
-    throttleMin() {
-        this.T_f = this.MIN_THRUST;
-        this.T_a = this.MIN_THRUST;
-    }
-
-    throttleHover() {
-        this.T_f = this.HOVER_THRUST;
-        this.T_a = this.HOVER_THRUST;
-    }
-
-    throttleLeft() {
-        this.T_a = this.MAX_THRUST * 0.8;
-    }
-
-    throttleRight() {
-        this.T_f = this.MAX_THRUST * 0.8;
     }
 
     render(ctx, drone) {
@@ -175,7 +151,7 @@ class Drone {
 
         ydot[0] = -y[1] * y[2] + g * Math.sin(y[3]) - this.DRAG_FACTOR * y[0]; // this may be the problem line
         ydot[1] = g * Math.cos(y[3]) - (this.T_f + this.T_a) / this.m + y[0] * y[2] - this.DRAG_FACTOR * y[1]; // artificial drag
-        ydot[2] = (this.T_f * (this.x_f - this.x_CG) + this.T_a * (this.x_a - this.x_CG)) / this.m / this.Iyy;
+        ydot[2] = (this.T_f * (this.x_f - this.x_CG) + this.T_a * (this.x_a - this.x_CG)) / this.Iyy;
         ydot[3] = y[2];
 
         for (let i = 0; i < 3; i++) {
