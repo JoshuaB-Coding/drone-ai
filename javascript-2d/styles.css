@@ -26,7 +26,7 @@ p {
 .wrapper {
     height: 300px;
     width: inherit;
-    padding: 1% 20%;
+    padding: 1% 30%;
 }
 
 .network {
@@ -35,24 +35,38 @@ p {
     width: inherit;
     height: inherit;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
     padding: 1% 5%;
+    background-color: rgba(100, 10, 255, 0.8);
 }
 
-.network-row {
+.network-column {
     display: flex;
-    justify-content: space-between;
-    padding: inherit;
-    width: inherit;
-    height: inherit;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 0% 5%;
     border: 1px solid black;
     overflow: hidden; /* need to fix overflow to scale down nodes */
 }
 
+.network-column:first-child {
+    align-items: flex-start;
+    padding-left: 0;
+}
+
+.network-column:last-child {
+    align-items: flex-end;
+    padding-right: 0;
+}
+
 .network-node {
+    /* sets all circles inside to fit parent - set actual width individually if needed */
+    flex-grow: 1;
     border: 0.5px solid black;
     border-radius: 50%;
     aspect-ratio: 1;
-    max-height: inherit;
+    background-color: rgba(255, 200, 0, 0.8);
 }

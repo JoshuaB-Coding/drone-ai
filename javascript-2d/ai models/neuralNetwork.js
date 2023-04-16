@@ -4,6 +4,9 @@ class NeuralNetwork {
         this.numberOfLayers = layerInformation.numberOfLayers;
         this.layers = this.generateLayers(layerInformation);
         this.type = type;
+
+        // Improve the way this is done
+        this.container = document.getElementById('network');
     }
 
     output(state) {
@@ -58,6 +61,30 @@ class NeuralNetwork {
     mutate() {
         for (var layer of this.layers) {
             layer.mutateAll();
+        }
+    }
+
+    render() {
+        // Remove current neural network HTML
+        while (this.container.hasChildNodes()) {
+            this.container.removeChild(this.container.firstChild);
+        }
+
+        var maximumHeight = null;
+
+        // Generate and append new children
+        for (const layer of this.layers) {
+            var column = document.createElement('div');
+            column.setAttribute('class', 'network-column');
+
+            // Create nodes
+            for (let _ = 0; _ < layer.numberOfOutputs; _++) {
+                var node = document.createElement('div');
+                node.setAttribute('class', 'network-node');
+                column.appendChild(node);
+            }
+
+            this.container.appendChild(column);
         }
     }
 };

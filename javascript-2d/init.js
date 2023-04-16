@@ -61,6 +61,7 @@ function startGame() {
 
         // Render background first to push it to back
         domain.renderBackground(evolution.agents[displayIndex].drone);
+        evolution.agents[displayIndex].neuralNetwork.render();
 
         evolution.render(domain.context);
 
