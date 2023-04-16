@@ -8,9 +8,7 @@ const g = 9.81 * 20;
 function startGame() {
     Assets.setup();
 
-    var container = document.createElement('div');
-    container.setAttribute('id', 'container');
-    document.body.appendChild(container);
+    var container = document.getElementById('container');
 
     domain.setup(container);
 
@@ -24,9 +22,9 @@ function startGame() {
     // document.body.appendChild(velocityText);
 
     // Warn user that audio is played
-    window.confirm("Audio is played during this game");
+    // window.confirm("Audio is played during this game");
 
-    const N = 100;
+    const N = 10;
     var evolution = new Population(N);
     const TRAINING_TIME = 10;
 

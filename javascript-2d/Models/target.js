@@ -5,7 +5,7 @@ class Target {
 
         this.colour = 'red';
 
-        this.generateNewTarget(1.0);
+        this.generateNewTarget(0.0);
     }
 
     generateNewTarget(pointTargetProbability) {
@@ -31,7 +31,7 @@ class Target {
     }
 
     reset() {
-        this.generateNewTarget(1.0);
+        this.generateNewTarget(0.0);
     }
 
     setLineColour(drone) {

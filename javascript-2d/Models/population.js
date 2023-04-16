@@ -27,7 +27,7 @@ class Population {
         const x = 25;
         this.NUMBER_OF_BEST_PERFORMERS = Math.floor(this.numberOfAgents * x / 100);
 
-        this.pointTargetProbability = 1.0;
+        this.pointTargetProbability = 0.0;
     }
 
     isFinished() {

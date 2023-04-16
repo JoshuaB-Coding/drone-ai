@@ -23,4 +23,36 @@ p {
     text-align: center;
 }
 
+.wrapper {
+    height: 300px;
+    width: inherit;
+    padding: 1% 20%;
+}
 
+.network {
+    border: 1px solid blue;
+    border-radius: 5px;
+    width: inherit;
+    height: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1% 5%;
+}
+
+.network-row {
+    display: flex;
+    justify-content: space-between;
+    padding: inherit;
+    width: inherit;
+    height: inherit;
+    border: 1px solid black;
+    overflow: hidden; /* need to fix overflow to scale down nodes */
+}
+
+.network-node {
+    border: 0.5px solid black;
+    border-radius: 50%;
+    aspect-ratio: 1;
+    max-height: inherit;
+}
